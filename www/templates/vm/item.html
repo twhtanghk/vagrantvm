@@ -1,0 +1,24 @@
+<ion-content >	
+	<ion-list>
+	
+	<ion-item ng-if="model.createdBy != null"
+	ng-repeat="model in collection.models | orderBy:['definition.key','-definition.version']  " 
+	item="item" class="item-avatar">
+        <div ng-click="getFile(model)">  
+        
+			<i class="item-image icon-circle activitiIcon ion-ios-people"></i>
+			<h2>{{model.definition.name}} 
+			 <span ng-if="!model.definition.suspended">(Active)</span>
+			 <span ng-if="model.definition.suspended">(Suspend)</span></h2>
+			<p>v{{model.definition.version}}, {{ model.deploymentTime | date: 'dd-MM-yyyy HH:mm' }}, {{ model.createdBy}}</p>
+		</div>
+	<ion-option-button ng-if="!model.definition.suspended" 
+		class="button button-positive icon-left ion-minus-circled" on-tap="$event.stopPropagation(); suspend(model);">{{'suspend' | translate}}</ion-option-button>
+	
+	<ion-option-button class="button button-assertive icon-left ion-trash-b" on-tap="$event.stopPropagation(); delete(model);">{{'delete' | translate}}</ion-option-button>		
+	</ion-item>	
+	
+	</ion-list>
+	<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="loadMore()">
+	</ion-infinite-scroll>	
+</ion-content>

@@ -1,0 +1,24 @@
+<ion-view>
+  <ion-header-bar class="item-input-inset" align-title="left">
+	<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+	<h1 class="title" style="text-align:center">Add Apps</h1>
+	<button ng-if="model.path && model.servername && model.port" class="button button-clear button-positive" ng-click="save()">Save</button>	        
+  </ion-header-bar>
+  <ion-content padding="true">
+	<div class="list">
+		<label class="item item-input">
+	    	<span class="input-label">Context Path</span>
+	    	<input type="text" ng-model="model.contextPath">
+		</label>
+		<label class="item item-input">
+	    	<span class="input-label">VM IP</span>
+	    	<input type="text" ng-model="model.vmIp">
+		</label>
+		<label class="item item-input">
+	    	<span class="input-label">Port</span>
+	    	<input type="text" ng-model="model.port">
+		</label>
+		
+	</div>
+  </ion-content>
+</ion-view>

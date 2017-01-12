@@ -1,0 +1,13 @@
+{
+	"processdef":		"Process definition",
+	"runningprocins":	"Running process instance",
+	"insttask":			"Instance task",
+	"upload":			"Upload",
+	"download":			"Download",
+    "save":				"Save",
+    "menu":				"Menu",
+    "selectfile":		"Please select file",
+    "history":			"Completed instance History",
+    "delete":			"Delete",
+    "suspend":			"Suspend"
+}
