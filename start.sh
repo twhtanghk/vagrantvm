@@ -1,6 +1,6 @@
 #!/bin/sh
 
-root=~/prod/proxyvm
+root=~/prod/todosailsnew
 sails=`which sails`
 
-forever start --workingDir ${root} -a -l proxyvm.log ${sails} lift --prod
+forever start --workingDir ${root} -a -l todosailsnew.log ${sails} lift --prod

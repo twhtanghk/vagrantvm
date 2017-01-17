@@ -8,21 +8,11 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        
-        <ion-item nav-clear menu-close href="#/businessProcess/deploy">
-          {{'upload' | translate}}
-        </ion-item>
-        <ion-item nav-clear menu-close href="#/businessProcess/list">
+
+        <ion-item nav-clear menu-close href="#/vm/list">
           {{'processdef' | translate}}
         </ion-item>
         
-        <ion-item nav-clear menu-close href="#/processins/insList">
-          {{'runningprocins' | translate}}
-        </ion-item>
-                
-        <ion-item nav-clear menu-close href="#/processins/history">
-          {{'history' | translate}}
-        </ion-item>
         <ion-item nav-clear menu-close ng-if="env.isNative()" ng-click="navigator.app.exitApp()">
           Exit
         </ion-item>

@@ -1,4 +1,4 @@
-io.sails.url = 'https://mob.myvnc.com'
+io.sails.url = 'https://app.ogcio.gov.hk'
 io.sails.path = "/im.app/socket.io"
 io.sails.useCORSRouteToGetCookie = false
     
@@ -9,14 +9,13 @@ module.exports =
 		/^file/i.test(document.URL)
 	platform: ->
 		if @isNative() then 'mobile' else 'browser'
-	authUrl:	'https://mob.myvnc.com'
+	authUrl:	'https://app.ogcio.gov.hk'
 	
-	path: 'todo'		
+	path: 'vm'		
 	oauth2:
-		authUrl: "#{@authUrl}/org/oauth2/authorize/"
+		authUrl: "#{@authUrl}/auth/oauth2/authorize/"
 		opts:
-			authUrl: "https://mob.myvnc.com/org/oauth2/authorize/"
+			authUrl: "https://app.ogcio.gov.hk/auth/oauth2/authorize/"
 			response_type:  "token"
-			scope:          "https://mob.myvnc.com/org/users"
-			client_id:      'proxyvmUAT'
-			
+			scope: 'User'
+			client_id: 'vagrantvmDEV'

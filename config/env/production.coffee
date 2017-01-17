@@ -19,7 +19,7 @@ module.exports =
 		mongo:
 			adapter:	'sails-mongo'
 			driver:		'mongodb'
-			url: 'mongodb://businessproc_mongo/businessproc' #dev
+			url: 'mongodb://proxyvm_mongo/proxyvm' #dev
 					
 	log:
 		level: 'info'

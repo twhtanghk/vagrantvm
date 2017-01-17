@@ -6,17 +6,17 @@ angular.module 'starter.model', ['PageableAR']
 
 
 
-		class BusinessProcess extends pageableAR.Model
+		class Vm extends pageableAR.Model
 			$idAttribute: 'id'
 			
-			$urlRoot: "api/businessProcess"
+			$urlRoot: "api/vm"
 
-		# BusinessProcessList
-		class BusinessProcessList extends pageableAR.PageableCollection
+		# VmList
+		class VmList extends pageableAR.PageableCollection
 
-			model: BusinessProcess
+			model: Vm
 			
-			$urlRoot: "api/businessProcess"
+			$urlRoot: "api/vm"
 
 		class User extends pageableAR.Model
 			$idAttribute: 'username'
@@ -34,41 +34,7 @@ angular.module 'starter.model', ['PageableAR']
 			model: User
 			
 			$urlRoot: "api/user"
-
-		class Processins extends pageableAR.Model
-			$idAttribute: 'id'
-			
-			$urlRoot: "api/processins"
-		
-		# ProcessinsList
-		class ProcessinsList extends pageableAR.PageableCollection
-			model: Processins
-		
-			$urlRoot: "api/processins"	
-		
-		#
-		class ProcessinsHistoryList extends pageableAR.PageableCollection
-			model: Processins
-		
-			$urlRoot: "api/processinsHistory"
-
-		class WorkflowTask extends pageableAR.Model
-			$idAttribute: 'id'
-			
-			$urlRoot: "api/workflowtask"
-		
-		# WorkflowTaskList
-		class WorkflowTaskList extends pageableAR.PageableCollection
-			model: WorkflowTask
-		
-			$urlRoot: "api/workflowtask"		
 						
-		BusinessProcess:		BusinessProcess
-		BusinessProcessList:	BusinessProcessList
-		User:		User
-		UserList:	UserList
-		Processins:				Processins
-		ProcessinsList:			ProcessinsList
-		ProcessinsHistoryList:	ProcessinsHistoryList
-		WorkflowTask:			WorkflowTask
-		WorkflowTaskList:		WorkflowTaskList
+		Vm:		Vm
+		VmList:	VmList
+		
