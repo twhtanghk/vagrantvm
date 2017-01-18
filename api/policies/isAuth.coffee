@@ -14,7 +14,7 @@ verifyToken = (token) ->
 				result = _.intersection scope, oauth2.scope
 				if result.length != oauth2.scope.length
 					return reject('Unauthorized access to #{oauth2.scope}')
-				###	
+					
 				# create user
 				# otherwise check if user registered before (defined in model.User or not)
 				user = _.pick res.body.user, 'username', 'email'
@@ -22,11 +22,6 @@ verifyToken = (token) ->
 					.findOrCreate user
 					.populateAll()
 					.then fulfill, reject
-				###	
-				###skip create user###
-				fulfill user
-				
-				
 			.catch reject
 			
 passport.use 'bearer', new bearer.Strategy {}, (token, done) ->

@@ -2,10 +2,10 @@
 module.exports = 
 	policies:
 		VmController:
-			'*':		false
-			find:		['isAuth']	
+			'*':		true
 			findOne:	['isAuth']			
-			create:		['isAuth']
-			destroy: 	['isAuth']
-			update:		['isAuth']
-		
+			create:		['setCreatedBy']
+		UserController:
+			'*':		false
+			find:		true
+			findOne:	['isAuth', 'user/me']

@@ -21,21 +21,10 @@ module.exports =
 		Model = actionUtil.parseModel req
 		cond = actionUtil.parseCriteria req
 		
-		sails.log "cond: #{JSON.stringify cond}"
-		
 		sortBy = actionUtil.parseSort(req)
-		if !_.isUndefined sortBy
-			if sortBy.indexOf("project") > -1
-				if sortBy.indexOf("asc") > -1
-					sortBy = 
-						"project":0
-						"task":1
-				else
-					sortBy = 
-						"project":1
-						"task":1
-			
+		
 		sails.log "sortBy: #{JSON.stringify sortBy}"
+		sails.log "cond: #{JSON.stringify cond}"
 		
 		count = Model.count()
 			.where( cond )

@@ -7,10 +7,8 @@
         <div ng-click="getFile(model)">  
         
 			<i class="item-image icon-circle activitiIcon ion-ios-people"></i>
-			<h2>{{model.definition.name}} 
-			 <span ng-if="!model.definition.suspended">(Active)</span>
-			 <span ng-if="model.definition.suspended">(Suspend)</span></h2>
-			<p>v{{model.definition.version}}, {{ model.deploymentTime | date: 'dd-MM-yyyy HH:mm' }}, {{ model.createdBy}}</p>
+			<h2>{{model.name}}:{{model.port}}, {{ model.type }} 
+			<p> {{ model.createdBy}}</p>
 		</div>
 	<ion-option-button ng-if="!model.definition.suspended" 
 		class="button button-positive icon-left ion-minus-circled" on-tap="$event.stopPropagation(); suspend(model);">{{'suspend' | translate}}</ion-option-button>

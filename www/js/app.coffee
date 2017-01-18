@@ -29,23 +29,7 @@ angular.module 'starter', ['ngFancySelect', 'ionic', 'util.auth', 'starter.contr
 			abstract: true
 			templateUrl: "templates/menu.html"
 	
-		# Apps
-		$stateProvider.state 'app.Vms',
-			url: "/vm/list?createdBy&sort"
-			cache: false
-			views:
-				'menuContent':
-					templateUrl: "templates/vm/list.html"
-					controller: 'ListCtrl'
-			resolve:
-				createdBy: ($stateParams) ->
-					return $stateParams.createdBy
-				resources: 'resources'
-				collection: (resources, createdBy) ->
-					ret = new resources.VmList()
-					ret.$fetch({params: {createdBy: createdBy, sort: 'path asc'}})
-					
-		$stateProvider.state 'app.VmCreate',
+		$stateProvider.state 'app.create',
 			url: "/vm/create"
 			cache: false
 			views:
@@ -53,23 +37,22 @@ angular.module 'starter', ['ngFancySelect', 'ionic', 'util.auth', 'starter.contr
 					templateUrl: "templates/vm/create.html"
 					controller: 'VmCtrl'
 			resolve:
-				resources: 'resources'	
+				resources: 'resources'
+				
 				model: (resources) ->
-					ret = new resources.Vm()
-		###			
-		$stateProvider.state 'app.VmEdit',
-			url: "/vm/edit/:id"
+					ret = new resources.Vm()	
+					
+		$stateProvider.state 'app.list',
+			url: "/vm/list"
 			cache: false
 			views:
 				'menuContent':
-					templateUrl: "templates/vm/edit.html"
-					controller: 'VmCtrl'
+					templateUrl: "templates/vm/list.html"
+					controller: 'ListCtrl'
 			resolve:
-				id: ($stateParams) ->
-					$stateParams.id
 				resources: 'resources'	
-				model: (resources, id) ->
-					ret = new resources.Vm({id: id})
-					ret.$fetch()			
-		###	
-		$urlRouterProvider.otherwise('/vm/list?createdBy=me&sort=port asc')
+				collection: (resources) ->
+					ret = new resources.VmList()
+					ret.$fetch()
+
+		$urlRouterProvider.otherwise('/vm/list')

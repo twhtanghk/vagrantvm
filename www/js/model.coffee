@@ -3,9 +3,6 @@ require 'PageableAR'
 angular.module 'starter.model', ['PageableAR']
 
 	.factory 'resources', (pageableAR) ->
-
-
-
 		class Vm extends pageableAR.Model
 			$idAttribute: 'id'
 			
@@ -34,7 +31,8 @@ angular.module 'starter.model', ['PageableAR']
 			model: User
 			
 			$urlRoot: "api/user"
-						
+
 		Vm:		Vm
 		VmList:	VmList
-		
+		User:		User
+		UserList:	UserList
