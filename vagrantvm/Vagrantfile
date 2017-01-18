@@ -1,0 +1,10 @@
+Vagrant.configure("2") do |config|
+  config.vm.provider "docker" do |d|
+    d.image = "debian"
+    d.name = 'inputname-debian'
+    d.remains_running = false
+    d.cmd = ["/bin/bash", "-l"]
+    d.ports = ["8080:inputport"]
+    d.has_ssh = false
+  end
+end

@@ -1,22 +1,17 @@
 fs = require 'fs'
+child_process = require('child_process')
 
-genFileName = (appsName) ->
-	#filename =	"#{appsName}#{sails.config.proxy.file.extension}"
-	name = 	sails.config.vmconfig.file.name
-	path = 	sails.config.vmconfig.file.path
-	return path + name
-	
 module.exports = 
 	genFile: (data) ->
 		FilePath = sails.config.vmconfig.file.path + data.name
 		FileName = sails.config.vmconfig.file.name
-		
 		sails.log.info "Create directory: #{FilePath} of vm: name: #{data.name} ,port: #{data.port}"
-		 
-		filedata = "test text"
+		
 		try
 			fs.mkdirSync FilePath
-			fs.writeFileSync FilePath+ FileName, filedata
+			child_process.execSync "cp #{sails.config.vmconfig.file.path}#{sails.config.vmconfig.file.name} #{FilePath}"
+			child_process.execSync "sed -ie 's/inputname/#{data.name}/g' #{FilePath}/#{FileName}" 
+			child_process.execSync "sed -ie 's/inputport/#{data.port}/g' #{FilePath}/#{FileName}"
 		catch err
 			sails.log.error "Create directory fail: #{FilePath} err: #{err}"
 			return
