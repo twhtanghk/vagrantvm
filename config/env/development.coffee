@@ -21,13 +21,14 @@ module.exports =
 		mongo:
 			adapter:	'sails-mongo'
 			driver:		'mongodb'
-			url: 'mongodb://todoactiviti_mongo/vagrantvm' #dev
-			url1: 'mongodb://vagrantvmrw:pass1234@localhost/vagrantvm'
+			url1: 'mongodb://todoactiviti_mongo/vagrantvm' #dev
+			url: 'mongodb://vagrantvmrw:pass1234@localhost/vagrantvm'
 					
 	log:
 		level: 'silly'
 	
 	vmconfig:
 		file:
-			path:	'./vagrantvm/'
-			name:	'/Vagrantfile'	
+			path1:	'./vagrantvm/'
+			path:	'/tmp/vagrantvm/'
+			name:	'Vagrantfile'	
