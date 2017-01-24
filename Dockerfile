@@ -10,7 +10,7 @@ RUN apt-get update \
 &&  apt-get clean
 
 RUN curl -O https://releases.hashicorp.com/vagrant/1.9.1/vagrant_1.9.1_x86_64.deb \
-&&  deb -i vagrant_1.9.1_x86_64.deb \
+&&  dpkg -i vagrant_1.9.1_x86_64.deb \
 &&  rm vagrant_1.9.1_x86_64.deb
 
 # web app
