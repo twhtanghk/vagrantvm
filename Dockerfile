@@ -1,8 +1,14 @@
 FROM node
 
+# vagrant
+RUN echo "deb http://download.virtualbox.org/virtualbox/debian jessie contrib" >/etc/apt/sources.list.d/virtualbox.list \
+&&  curl -O https://www.virtualbox.org/download/oracle_vbox_2016.asc \
+&&  apt-key add oracle_vbox_2016.asc
+
 RUN apt-get update \
-&&  apt-get install -y vagrant \
+&&  apt-get install -y vagrant virtualbox-5.1 \
 &&  apt-get clean
+
 
 # web app
 ENV VER=${VER:-master} \
