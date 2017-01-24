@@ -1,20 +1,19 @@
-FROM node:4-slim                                                                
+FROM node
 
+RUN apt-get update \
+&&  apt-get install -y vagrant \
+&&  apt-get clean
+
+# web app
 ENV VER=${VER:-master} \
-    REPO=https://github.com/dorissschoi/proxyvm \
+    REPO=https://github.com/twhtanghk/vagrantvm \
     APP=/usr/src/app
-
-RUN apt-get update && \
-    apt-get -y install git python && \ 
-    apt-get clean
 
 RUN git clone -b $VER $REPO $APP
 
 WORKDIR $APP
 
-RUN npm install bower coffee-script -g && \
-    npm install  && \
-    bower install --allow-root
+RUN npm install
 
 EXPOSE 1337                                                                     
                                                                                 
