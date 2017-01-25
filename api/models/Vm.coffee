@@ -1,35 +1,47 @@
 module.exports =
-	tableName:		'vm'
 
-	schema:			true
+  tableName: 'vm'
 
-	attributes:
-		name:
-			type:		'string'
-			required:	true
-			unique: 	true
+  schema: true
 
-		port:
-			type:		'integer'
-			required:	true
-			  
-		type:
-			type:		'string'
-			required:	true
+  attributes:
 
-		createdBy:
-			type:		'string'
-			required:	true
-			      
-		createdAt:
-			type:		'datetime'
-			defaultsTo:	new Date()
-			
-		updatedAt:
-			type:		'datetime'
-			defaultsTo:	new Date()   
+    name:
+      type: 'string'
+      required: true
+      unique: true
 
-	afterCreate: (values, cb) ->
-		VMService.genFile(values)
+    port:
+      type: 'json'
+      required: true
 
-		return cb null, values 	
+    createdBy:
+      model: 'user'
+      required:  true
+            
+  nextPort: (cb) ->
+    Vm
+      .find()
+      .sort 'createAt DESC'
+      .limit 1
+      .then (last) ->
+        ret = sails.config.vagrant.portStart
+        if last?
+          ret = {ssh: last.ssh + 1, http: last.http + 1}
+        cb null, ret
+      .catch cb
+    
+  beforeCreate: (values, cb) ->
+    Vm
+      .nextPort (err, port) ->
+        if err?
+          return cb err
+        values.port = port
+        cb()
+      
+  afterCreate: (values, cb) ->
+    sails.services.vm
+      .genFile values
+      .then ->
+        cb()
+      .catch cb
