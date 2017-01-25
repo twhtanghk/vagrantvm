@@ -1,33 +1,22 @@
 version: '2'
 services:
-  proxyvm:
-    image: dorissschoi/vagrantvm
-    hostname: vagrantvm
-    container_name: vagrantvm    
+  vagrant_mongo:
+    image: mongo
     ports:
-      - 8040:1337
-      - 8041:8080
+      - 27017
+    command: mongod --directoryperdb 
+
+  vagrant:
+    image: twhtanghk/vagrantvm
+    depends_on: 
+      - vagrant_mongo
+    privileged: true
+    ports:
+      - "2200-2250:2200-2250"
+      - "8000-8050:8000-8050"
     volumes:
-      - ${COMPOSEROOT}/vagrantvm/config/env/development.coffee:/usr/src/app/config/env/development.coffee
-      - ${COMPOSEROOT}/vagrantvm/config/env/development.coffee:/usr/src/app/config/env/production.coffee
-      - ${COMPOSEROOT}/vagrantvm/www/js/config/development.coffee:/usr/src/app/www/js/config/development.coffee
-      - ${COMPOSEROOT}/vagrantvm/www/js/config/development.coffee:/usr/src/app/www/js/config/production.coffee
-      - /etc/ssl/certs:/etc/ssl/certs
-      - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates
-      - ${COMPOSEROOT}/vagrantvm/entrypoint.sh:/usr/src/app/entrypoint.sh
-      - ${COMPOSEROOT}/vagrantvm:/usr/src/app
-
-    env_file:
+      - /lib/modules:/lib/modules
+      - /dev/vboxdrv:/dev/vboxdrv
+    env_file: 
       - ./.env
-    external_links:
-      - todoactiviti_mongo
-    networks:
-      - activiti_default
-      - todoactivitimongo_default
-    entrypoint: top -b -d 1000          
-
-networks:
-  activiti_default:
-    external: true
-  todoactivitimongo_default:
-    external: true
+      - ../.env
