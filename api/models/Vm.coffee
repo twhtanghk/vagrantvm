@@ -26,8 +26,10 @@ module.exports =
       .limit 1
       .then (last) ->
         ret = sails.config.vagrant.portStart
-        if last?
-          ret = {ssh: last.ssh + 1, http: last.http + 1}
+        if last.length == 1
+          ret = 
+            ssh: last[0].port.ssh + 1
+            http: last[0].port.http + 1
         cb null, ret
       .catch cb
     
@@ -41,7 +43,16 @@ module.exports =
       
   afterCreate: (values, cb) ->
     sails.services.vm
-      .genFile values
+      .create values
       .then ->
         cb()
       .catch cb
+
+  afterDestroy: (vmlist, cb) ->
+    Promise
+     .all vmlist.map (vm) ->
+       sails.services.vm
+         .destroy vm
+     .then ->
+       cb()
+     .catch cb

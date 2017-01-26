@@ -8,6 +8,6 @@ describe 'service', ->
           http: 8000
 
   it 'destroy vm', ->
-    sails.service.vm
+    sails.services.vm
       .destroy
         name: 'test'
