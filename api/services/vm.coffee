@@ -7,6 +7,8 @@ cfgDir = (vm) ->
   path.join sails.config.vagrant.cfgPath, vm.name
 
 module.exports = 
+  cfgDir: cfgDir
+
   create: (vm, cfg = sails.config.vagrant) ->
     cfgFile = path.join cfgDir(vm), 'VagrantFile'
     params = _.extend sails.config.vagrant, vm

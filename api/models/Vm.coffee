@@ -33,7 +33,7 @@ module.exports =
         cb null, ret
       .catch cb
     
-  beforeCreate: (values, cb) ->
+  beforeValidate: (values, cb) ->
     Vm
       .nextPort (err, port) ->
         if err?
