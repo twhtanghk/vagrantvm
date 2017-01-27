@@ -14,55 +14,53 @@ describe 'controller', ->
       .then (t) ->
         token = t
 
-  vmname.map (name) ->
-    it 'create vm', ->
+  it 'create vm', ->
+    Promise.all vmname.map (name) ->
       req sails.hooks.http.app
         .post '/api/vm'
         .set 'Authorization', "Bearer #{token}"
         .send name: name
         .expect 201
         .then (res) ->
-          sails.log.debug res.statusCode
-          sails.log.debug res.body
           vmlist.push res.body
 
-  vmlist.map (vm) ->
-    it 'up vm', ->
+  it 'up vm', ->
+    Promise.all vmlist.map (vm) ->
       req sails.hooks.http.app
         .put "/api/vm/#{vm.id}/up"
         .set 'Authorization', "Bearer #{token}"
         .expect 200
 
-  vmlist.map (vm) ->
-    it 'restart vm', ->
+  it 'restart vm', ->
+    Promise.all vmlist.map (vm) ->
       req sails.hooks.http.app
         .put "/api/vm/#{vm.id}/restart"
         .set 'Authorization', "Bearer #{token}"
         .expect 200
 
-  vmlist.map (vm) ->
-    it 'down vm', ->
+  it 'down vm', ->
+    Promise.all vmlist.map (vm) ->
       req sails.hooks.http.app
         .put "/api/vm/#{vm.id}/suspend"
         .set 'Authorization', "Bearer #{token}"
         .expect 200
 
-  vmlist.map (vm) ->
-    it 'down vm', ->
+  it 'down vm', ->
+    Promise.all vmlist.map (vm) ->
       req sails.hooks.http.app
         .put "/api/vm/#{vm.id}/resume"
         .set 'Authorization', "Bearer #{token}"
         .expect 200
 
-  vmlist.map (vm) ->
-    it 'down vm', ->
+  it 'down vm', ->
+    Promise.all vmlist.map (vm) ->
       req sails.hooks.http.app
         .put "/api/vm/#{vm.id}/down"
         .set 'Authorization', "Bearer #{token}"
         .expect 200
 
-  vmlist.map (vm) ->
-    it 'delete vm', ->
+  it 'delete vm', ->
+    Promise.all vmlist.map (vm) ->
       req sails.hooks.http.app
         .del "/api/vm/#{vm.id}"
         .set 'Authorization', "Bearer #{token}"

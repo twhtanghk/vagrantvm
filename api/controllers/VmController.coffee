@@ -3,9 +3,18 @@ sh = require 'shelljs'
 module.exports =
   cmd: (req, res) ->
     cmd = req.params.cmd
-    name = req.params.name
-    sh.cd sails.services.cfgDir name
-    sh.exec "vagrant #{cmd}"
+    id = req.params.id
+    sails.models.vm
+      .findOne
+        id: id
+        createdBy: req.user.email
+      .then (vm) ->
+        if vm?
+          sh.cd sails.services.vm.cfgDir vm
+          sh.exec "vagrant #{cmd}", (code, out, err) ->
+            res.ok code
+        else
+          res.notFound()
 
   up: (req, res) ->
     req.params.cmd = 'up'

@@ -10,8 +10,8 @@ module.exports = (req, res, next) ->
     return next()
     
   cond = 
-      id:      pk
-      createdBy:  req.user.id
+      id: pk
+      createdBy: req.user.email
   Model.findOne()
     .where( cond )
     .then (data) ->

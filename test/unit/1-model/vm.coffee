@@ -9,8 +9,8 @@ describe 'model', ->
       .then (user) ->
         createdBy = user
         
-  vmlist.map (name) ->
-    it 'create vm', ->
+  it 'create vm', ->
+    Promise.all vmlist.map (name) ->
       sails.models.vm
         .create
           name: name
@@ -19,8 +19,8 @@ describe 'model', ->
             http: 8000
           createdBy: createdBy
 
-  vmlist.map (name) ->
-    it 'delete vm', ->
+  it 'delete vm', ->
+    Promise.all vmlist.map (name) ->
       sails.models.vm
         .destroy
           name: name
