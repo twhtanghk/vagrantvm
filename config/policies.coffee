@@ -2,7 +2,7 @@ module.exports =
   policies:
     VmController:
       '*': false
-      findOne: ['isAuth']      
+      findOne: ['isAuth', 'isOwner']
       find: ['isAuth', 'filterByOwner']
       create: ['isAuth', 'setCreatedBy']
       up: ['isAuth', 'isOwner']
@@ -10,6 +10,7 @@ module.exports =
       restart: ['isAuth', 'isOwner']
       suspend: ['isAuth', 'isOwner']
       resume: ['isAuth', 'isOwner']
+      destroy: ['isAuth', 'isOwner']
     UserController:
       '*': false
       find: true

@@ -11,6 +11,7 @@
     throw new Error "process.env.#{name} not yet defined"
 
 module.exports =
+  upTime: 120000
   tokenUrl: process.env.TOKENURL
   scope: process.env.SCOPE.split ' '
   client:

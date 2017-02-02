@@ -15,7 +15,7 @@ if not ('HTTP' of process.env)
 module.exports =
   vagrant:
     template: ->
-      _.template fs.readFileSync path.join(root, 'config/vagrant/cfg.template')
+      _.template fs.readFileSync path.join(module.exports.vagrant.cfgPath, 'cfg.template')
     cfgPath: path.join root, 'config/vagrant'
     box: process.env.BOX
     memory: parseInt process.env.MEMORY

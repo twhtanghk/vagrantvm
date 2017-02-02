@@ -1,3 +1,6 @@
+Promise = require 'bluebird'
+sh = require 'shelljs'
+    
 module.exports =
 
   tableName: 'vm'
@@ -18,6 +21,40 @@ module.exports =
     createdBy:
       model: 'user'
       required:  true
+
+    cmd: (op, async = false) ->
+      cwd = sails.services.vm.cfgDir @
+      new Promise (resolve, reject) ->
+        ret = sh.exec "env VAGRANT_CWD=#{cwd} vagrant #{op}", {async: async, silent: true}, (rc, out, err) ->
+          if err?
+            return reject err
+          resolve out
+        if async
+          ret.stderr.pipe process.stderr
+          ret.stdout.pipe process.stdout
+          resolve()
+
+    status: ->
+      @cmd 'status'
+        .then (status) ->
+          pattern = /^default[ ]*(.*)$/m
+          pattern.exec(status)?[1]
+        .catch sails.log.error
+
+    up: ->
+      @cmd 'up', true
+
+    down: ->
+      @cmd 'halt'
+
+    restart: ->
+      @cmd 'reload'
+
+    suspend: ->
+      @cmd 'suspend'
+
+    resume: ->
+      @cmd 'resume'
             
   nextPort: (cb) ->
     Vm
@@ -48,11 +85,16 @@ module.exports =
         cb()
       .catch cb
 
-  afterDestroy: (vmlist, cb) ->
-    Promise
-     .all vmlist.map (vm) ->
-       sails.services.vm
-         .destroy vm
-     .then ->
-       cb()
-     .catch cb
+  beforeDestroy: (criteria, cb) ->
+    sails.models.vm
+      .find criteria
+      .then (vmlist) ->
+        Promise.map vmlist, (vm) ->
+          vm
+            .down()
+            .then ->
+              sails.services.vm
+                .destroy vm
+      .then ->
+        cb()
+      .catch cb

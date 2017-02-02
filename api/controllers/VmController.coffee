@@ -1,20 +1,30 @@
+actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
 sh = require 'shelljs'
 
 module.exports =
-  cmd: (req, res) ->
-    cmd = req.params.cmd
-    id = req.params.id
+  findOne: (req, res) ->
+    pk = actionUtil.requirePk req
     sails.models.vm
-      .findOne
-        id: id
-        createdBy: req.user.email
+      .findOne id: pk
       .then (vm) ->
         if vm?
-          sh.cd sails.services.vm.cfgDir vm
-          sh.exec "vagrant #{cmd}", (code, out, err) ->
-            res.ok code
-        else
-          res.notFound()
+          return vm.status()
+            .then (status) ->
+              res.json _.extend vm, status: status
+        res.notFound()
+      .catch res.serverError
+
+  cmd: (req, res) ->
+    pk = actionUtil.requirePk req
+    sails.models.vm
+      .findOne id: pk
+      .then (vm) ->
+        if vm?
+          return vm[req.params.cmd]()
+            .then ->
+              res.ok()
+        res.notFound()
+      .catch res.serverError
 
   up: (req, res) ->
     req.params.cmd = 'up'
@@ -25,7 +35,7 @@ module.exports =
     module.exports.cmd req, res
 
   restart: (req, res) ->
-    req.params.cmd = 'reload'
+    req.params.cmd = 'restart'
     module.exports.cmd req, res
 
   suspend: (req, res) ->
