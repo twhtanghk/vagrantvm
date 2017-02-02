@@ -1,13 +1,10 @@
 FROM node
 
 # vagrant
-RUN echo "deb http://download.virtualbox.org/virtualbox/debian jessie contrib" >/etc/apt/sources.list.d/virtualbox.list \
-&&  curl -O https://www.virtualbox.org/download/oracle_vbox_2016.asc \
-&&  apt-key add oracle_vbox_2016.asc
-
 RUN apt-get update \
-&&  apt-get install -y virtualbox-5.1 rsync \
-&&  apt-get clean
+&&  env DEBIAN_FRONTEND=noninteractive apt-get install -y qemu-kvm libvirt-bin ebtables dnsmasq libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev \
+&&  apt-get clean \
+&&  usermod -a -G libvirt-qemu root
 
 RUN curl -O https://releases.hashicorp.com/vagrant/1.9.1/vagrant_1.9.1_x86_64.deb \
 &&  dpkg -i vagrant_1.9.1_x86_64.deb \
