@@ -9,7 +9,7 @@ services:
       SERVICE_NAME: vagrant_mongo
 
   vagrant:
-    image: twhtanghk/vagrantvm
+    image: dorissschoi/vagrantvm
     depends_on: 
       - vagrant_mongo
     privileged: true
