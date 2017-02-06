@@ -1,17 +1,16 @@
-#env = require './env.coffee'
+env = require './env.coffee'
 fs = require 'fs'
 config = JSON.parse fs.readFileSync './.sailsrc'
 
 Sails = require 'sails'
 
 before (done) ->
-	@timeout 4000000
+  @timeout env.timeout
 
-	Sails.lift config, (err, sails) ->
-		if err
-			return done err
-    
-		done err, sails
+  Sails.lift config, (err, sails) ->
+    if err
+      return done err
+    done err, sails
 		
 after (done) ->
-	Sails.lower done	
+  Sails.lower done	

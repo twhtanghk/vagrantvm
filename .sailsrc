@@ -8,5 +8,8 @@
     "session": false,
     "i18n": false,
     "views": false
+  },
+  "paths": {
+    "public": "www"
   }
 }
