@@ -55,6 +55,9 @@ module.exports =
 
     resume: ->
       @cmd 'resume'
+
+    destroy: ->
+      @cmd 'destroy'
             
   nextPort: (cb) ->
     Vm
@@ -92,6 +95,8 @@ module.exports =
         Promise.map vmlist, (vm) ->
           vm
             .down()
+            .then ->
+              vm.destroy()
             .then ->
               sails.services.vm
                 .destroy vm
