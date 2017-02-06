@@ -13,6 +13,7 @@ services:
     depends_on: 
       - vagrant_mongo
     privileged: true
+    network_mode: host
     ports:
       - "2200-2250:2200-2250"
       - "8000-8050:8000-8050"
