@@ -12,7 +12,7 @@ RUN curl -O https://releases.hashicorp.com/vagrant/1.9.1/vagrant_1.9.1_x86_64.de
 &&  vagrant plugin install vagrant-libvirt
 
 # web app
-ENV VER=${VER:-master} \
+ENV VER=${VER:-controller} \
     REPO=https://github.com/twhtanghk/vagrantvm \
     APP=/usr/src/app
 
