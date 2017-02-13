@@ -1,18 +1,10 @@
 <ion-content >	
 	<ion-list>
 	
-	<ion-item ng-if="model.createdBy != null"
-	ng-repeat="model in collection.models | orderBy:['definition.key','-definition.version']  " 
-	item="item" class="item-avatar">
-        <div ng-click="getFile(model)">  
-        
-			<i class="item-image icon-circle activitiIcon ion-ios-people"></i>
-			<h2>{{model.name}}:{{model.port}}, {{ model.type }} 
-			<p> {{ model.createdBy}}</p>
-		</div>
-	<ion-option-button ng-if="!model.definition.suspended" 
-		class="button button-positive icon-left ion-minus-circled" on-tap="$event.stopPropagation(); suspend(model);">{{'suspend' | translate}}</ion-option-button>
-	
+	<ion-item ng-repeat="model in collection.models">
+		<pre>{{model.name}}  </pre>
+		<pre ng-repeat="(key, value) in model.port">  {{key}}: {{value}} </pre>
+	<ion-option-button class="button button-positive icon-left ion-minus-circled" on-tap="$event.stopPropagation(); up(model);">{{'up' | translate}}</ion-option-button>	
 	<ion-option-button class="button button-assertive icon-left ion-trash-b" on-tap="$event.stopPropagation(); delete(model);">{{'delete' | translate}}</ion-option-button>		
 	</ion-item>	
 	
