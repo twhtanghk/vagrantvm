@@ -8,13 +8,29 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
 		$scope.env = env
 		$scope.navigator = navigator
 
-	.controller 'ListCtrl', ($rootScope, $stateParams, $scope, collection, $location, resources, $ionicModal, $filter, FileSaver, Blob) ->
+	.controller 'ListCtrl', ($rootScope, $stateParams, $scope, collection, $location, resources, $ionicModal, $filter, FileSaver, Blob, $ionicListDelegate) ->
 		_.extend $scope,
 			
 			collection: collection
 			
 			delete: (item) ->
 				collection.remove item
+				
+			up: (item)->	
+				item.up()
+					.then (data)->	
+						data.status = env.vmStatus.up
+						#data.status = "UP"
+						$ionicListDelegate.closeOptionButtons()	
+					.catch alert
+					
+			down: (item)->	
+				item.down()
+					.then (data)->	
+						data.status = env.vmStatus.down
+						#data.status = "DOWN"
+						$ionicListDelegate.closeOptionButtons()	
+					.catch alert				
 
 			loadMore: ->
 				collection.$fetch()
@@ -31,6 +47,6 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
 					.then ->
 						$location.url "/list"
 					.catch (err) ->
-						alert {data:{error: "VM already exist."}}	
+						alert {data:{error: "VM already exist."}}		
 								
 							

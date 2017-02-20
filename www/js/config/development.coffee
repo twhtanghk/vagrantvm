@@ -19,3 +19,6 @@ module.exports =
 			response_type:  "token"
 			scope: 'User'
 			client_id: 'vagrantvmDEV'
+	vmStatus:
+		up: 'UP'
+		down: 'DOWN'			
