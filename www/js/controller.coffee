@@ -20,7 +20,6 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
 				item.up()
 					.then (data)->	
 						data.status = env.vmStatus.up
-						#data.status = "UP"
 						$ionicListDelegate.closeOptionButtons()	
 					.catch alert
 					
@@ -28,7 +27,6 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
 				item.down()
 					.then (data)->	
 						data.status = env.vmStatus.down
-						#data.status = "DOWN"
 						$ionicListDelegate.closeOptionButtons()	
 					.catch alert				
 
@@ -47,6 +45,6 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
 					.then ->
 						$location.url "/list"
 					.catch (err) ->
-						alert {data:{error: "VM already exist."}}		
+						alert {data:{error: "VM already exist."}}	
 								
 							
