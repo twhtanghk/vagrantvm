@@ -1,4 +1,4 @@
 module.exports =
   models:
     connection: 'mongo'
-    migrate: 'safe'
+    migrate: 'alter'

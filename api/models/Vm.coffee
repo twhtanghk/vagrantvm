@@ -62,7 +62,7 @@ module.exports =
   nextPort: (cb) ->
     Vm
       .find()
-      .sort 'createAt DESC'
+      .sort 'createdAt DESC'
       .limit 1
       .then (last) ->
         ret = sails.config.vagrant.portStart
