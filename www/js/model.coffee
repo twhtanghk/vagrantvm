@@ -7,6 +7,11 @@ angular.module 'starter.model', ['PageableAR']
 			$idAttribute: 'id'
 			
 			$urlRoot: "api/vm"
+			
+			up: ->
+				@$save {}, url: "#{@$url()}/up"
+			down: ->
+				@$save {}, url: "#{@$url()}/down"	
 
 		# VmList
 		class VmList extends pageableAR.PageableCollection
