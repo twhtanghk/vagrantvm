@@ -126,7 +126,6 @@ nbproject
 /www/css/**
 /www/lib
 /www/js/*.js
-/www/js/env.coffee
 /*.orig
 
 /data/
