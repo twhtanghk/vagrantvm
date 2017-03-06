@@ -22,3 +22,4 @@ module.exports =
     portStart:
       ssh: parseInt process.env.SSH
       http: parseInt process.env.HTTP
+    upStatus: process.env.upStatus  

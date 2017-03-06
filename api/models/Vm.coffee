@@ -40,10 +40,18 @@ module.exports =
           pattern = /^default[ ]*(.*)$/m
           pattern.exec(status)?[1]
         .catch sails.log.error
-
+    
     up: ->
-      @cmd 'up', true
-
+      @cmd 'status'
+        .then (status) ->
+          pattern = /^default[ ]*(.*)$/m
+          if pattern.exec(status)?[1] == sails.config.vagrant.upStatus
+            console.log "vm already running"
+          else  
+            console.log "vm start up"
+            @cmd 'up', true
+        .catch sails.log.error    
+        
     down: ->
       @cmd 'halt'
 
