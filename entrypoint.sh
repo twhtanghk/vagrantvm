@@ -1,3 +1,4 @@
 #!/bin/sh
 
-node app.js  --prod
+node_modules/.bin/gulp
+node app.js --prod
