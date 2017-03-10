@@ -9,7 +9,10 @@
 <ion-content>
   <ion-list>
     <ion-item 
-      ng-repeat="model in collection.models" 
+      class="item-avatar item-complex"
+      on-hold="showAction()"
+      ng-repeat="model in collection.models"
+      ng-controller="ItemCtrl"
       ng-include="'templates/vm/item.html'">
     </ion-item>
     <ion-infinite-scroll

@@ -1,8 +1,10 @@
-<div class="item-content">
-  {{model.name}}
+<div class='item-content'>
+  <img src="img/favicon.png">
+  <h2>{{model.name}}</h2>
+  <p>{{model.status}}</p>
 </div>
 <ion-option-button 
   class="button button-assertive icon-left ion-trash-b"
-  ng-click="collection.remove(model)">
+  on-tap="collection.remove(model)">
   {{'delete' | translate}}
 </ion-option-button>
