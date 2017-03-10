@@ -12,6 +12,9 @@ angular.module 'starter.model', ['PageableAR']
       cmd: (op) ->
         @$save {}, url: "#{@$url()}/#{op}"
 
+      cfg: ->
+        JSON.stringify _.extend _.pick(@, 'status'), @port
+
     # VmList
     class VmList extends pageableAR.PageableCollection
 
