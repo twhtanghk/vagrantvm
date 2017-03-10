@@ -1,9 +1,18 @@
+$sshcfg = <<SCRIPT
+file=/etc/ssh/sshd_config
+sed 's/PasswordAuthentication no/PasswordAuthentication yes/g' <$file >/tmp/$$
+mv /tmp/$$ $file
+echo vagrant:vagrant |chpasswd
+service ssh restart
+SCRIPT
+
 Vagrant.configure("2") do |config|
   config.vm.box = "<%=box%>"
 
   config.vm.network "forwarded_port", guest: 1337, host: <%=port.http%>
   config.vm.network "forwarded_port", guest: 22, host: <%=port.ssh%>
 
+  config.vm.provision "shell", inline: $sshcfg
   config.vm.provision "docker"
 
   config.vm.provider "libvirt" do |v|
