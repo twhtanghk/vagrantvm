@@ -2,42 +2,41 @@ require 'PageableAR'
 
 angular.module 'starter.model', ['PageableAR']
 
-	.factory 'resources', (pageableAR) ->
-		class Vm extends pageableAR.Model
-			$idAttribute: 'id'
-			
-			$urlRoot: "api/vm"
-			
-			up: ->
-				@$save {}, url: "#{@$url()}/up"
-			down: ->
-				@$save {}, url: "#{@$url()}/down"	
+  .factory 'resources', (pageableAR) ->
 
-		# VmList
-		class VmList extends pageableAR.PageableCollection
+    class Vm extends pageableAR.Model
+      $idAttribute: 'id'
+      
+      $urlRoot: "api/vm"
+      
+      cmd: (op) ->
+        @$save {}, url: "#{@$url()}/#{op}"
 
-			model: Vm
-			
-			$urlRoot: "api/vm"
+    # VmList
+    class VmList extends pageableAR.PageableCollection
 
-		class User extends pageableAR.Model
-			$idAttribute: 'username'
-			
-			$urlRoot: "api/user"
-			
-			_me = null
-			
-			@me: ->
-				_me ?= new User username: 'me'
-		
-		# UserList
-		class UserList extends pageableAR.PageableCollection
+      model: Vm
+      
+      $urlRoot: "api/vm"
 
-			model: User
-			
-			$urlRoot: "api/user"
+    class User extends pageableAR.Model
+      $idAttribute: 'username'
+      
+      $urlRoot: "api/user"
+      
+      _me = null
+      
+      @me: ->
+        _me ?= new User username: 'me'
+    
+    # UserList
+    class UserList extends pageableAR.PageableCollection
 
-		Vm:		Vm
-		VmList:	VmList
-		User:		User
-		UserList:	UserList
+      model: User
+      
+      $urlRoot: "api/user"
+
+    Vm:    Vm
+    VmList:  VmList
+    User:    User
+    UserList:  UserList
