@@ -1,3 +1,4 @@
+_ = require 'lodash'
 Promise = require 'bluebird'
 fs = Promise.promisifyAll require 'fs-extra'
 path = require 'path'
