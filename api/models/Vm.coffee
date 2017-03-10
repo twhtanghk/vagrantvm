@@ -26,12 +26,12 @@ module.exports =
       cwd = sails.services.vm.cfgDir @
       new Promise (resolve, reject) ->
         ret = sh.exec "env VAGRANT_CWD=#{cwd} vagrant #{op}", {async: async, silent: true}, (rc, out, err) ->
-          if err?
+          if rc != 0
             return reject err
           resolve out
+        ret.stderr.pipe process.stderr
+        ret.stdout.pipe process.stdout
         if async
-          ret.stderr.pipe process.stderr
-          ret.stdout.pipe process.stdout
           resolve()
 
     status: ->
