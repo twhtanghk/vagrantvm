@@ -1,5 +1,16 @@
 version: '2'
 services:
+  ssh:
+    image: twhtanghk/ssh
+    ports:
+      - 1337
+    networks:
+      - nginx_default
+    environment:
+      SERVICE_NAME: ssh
+    env_file:
+      - ./.env.ssh
+      
   vagrant_mongo:
     image: mongo
     ports:
@@ -14,13 +25,15 @@ services:
       - vagrant_mongo
     privileged: true
     network_mode: host
-    ports:
-      - "2200-2250:2200-2250"
-      - "8000-8050:8000-8050"
     volumes:
       - /lib/modules:/lib/modules
       - /var/run/libvirt:/var/run/libvirt
       - /var/lib/libvirt:/var/lib/libvirt
+      - ${COMPOSEROOT}/vagrantvm/data:/usr/src/app/config/vagrant
     env_file: 
       - ./.env
       - ../.env
+
+networks:
+  nginx_default:
+    external: true
