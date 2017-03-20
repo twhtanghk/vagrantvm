@@ -1,9 +1,14 @@
 $sshcfg = <<SCRIPT
 file=/etc/ssh/sshd_config
+# update sshd config
 sed 's/PasswordAuthentication no/PasswordAuthentication yes/g' <$file >/tmp/$$
 mv /tmp/$$ $file
 echo vagrant:vagrant |chpasswd
 service ssh restart
+# prefer IPv4 connections
+echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf
+# update nfs entry for fstab
+echo '<%=host%>:/usr/src/app/config/vagrant/<%=name%>/data /vagrant nfs4 0 2' >>/etc/fstab
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -23,5 +28,5 @@ Vagrant.configure("2") do |config|
     v.storage_pool_name = "default"
   end
 
-  config.vm.synced_folder '.', '/vagrant', type: 'rsync'
+  config.vm.synced_folder '.', '/vagrant', disabled: true
 end
