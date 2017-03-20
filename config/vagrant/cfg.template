@@ -1,14 +1,12 @@
 $sshcfg = <<SCRIPT
 file=/etc/ssh/sshd_config
-# update sshd config
 sed 's/PasswordAuthentication no/PasswordAuthentication yes/g' <$file >/tmp/$$
 mv /tmp/$$ $file
 echo vagrant:vagrant |chpasswd
 service ssh restart
-# prefer IPv4 connections
 echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf
-# update nfs entry for fstab
-echo '<%=hostname%>:/usr/src/app/config/vagrant/<%=name%> /vagrant nfs4 0 2' >>/etc/fstab
+mkdir /vagrant
+echo '<%=hostname%>:/<%=name%> /vagrant nfs4 nolock 0 2' >>/etc/fstab
 SCRIPT
 
 Vagrant.configure("2") do |config|
