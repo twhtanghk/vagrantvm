@@ -8,7 +8,7 @@ service ssh restart
 # prefer IPv4 connections
 echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf
 # update nfs entry for fstab
-echo '<%=host%>:/usr/src/app/config/vagrant/<%=name%>/data /vagrant nfs4 0 2' >>/etc/fstab
+echo '<%=hostname%>:/usr/src/app/config/vagrant/<%=name%> /vagrant nfs4 0 2' >>/etc/fstab
 SCRIPT
 
 Vagrant.configure("2") do |config|
