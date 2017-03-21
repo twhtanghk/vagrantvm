@@ -2,5 +2,7 @@
   "save": "Save",
   "menu": "Menu",
   "delete": "Delete",
-  "suspend": "Suspend"
+  "suspend": "Suspend",
+  "create": "Create"
+  "list": "List"
 }

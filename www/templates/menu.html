@@ -10,10 +10,10 @@
       <ion-list>
         
         <ion-item nav-clear menu-close href="#/vm/create">
-          create
+          {{'create' | translate}}
         </ion-item>
         <ion-item nav-clear menu-close href="#/vm/list">
-          list
+          {{'list' | translate}}
         </ion-item>
        
         <ion-item nav-clear menu-close ng-if="env.isNative()" ng-click="navigator.app.exitApp()">

@@ -2,5 +2,7 @@
   "save": "保存",
   "menu": "菜單",
   "delete": "刪除",
-  "suspend": "暫停"
+  "suspend": "暫停",
+  "create": "建立"
+  "list": "列表"
 }
