@@ -1,16 +1,10 @@
-<ion-content >	
-	<ion-list>
-	
-	<ion-item ng-repeat="model in collection.models">
-		<pre>{{model.name}}  </pre>
-		<pre ng-repeat="(key, value) in model.port">  {{key}}: {{value}} </pre>
-		<pre ng-if="model.status != undefined">  status: {{model.status}} </pre>
-	<ion-option-button ng-if="model.status != 'UP'" class="button button-positive icon-left ion-minus-circled" on-tap="$event.stopPropagation(); up(model);">{{'up' | translate}}</ion-option-button>
-	<ion-option-button ng-if="model.status == 'UP'" class="button button-balanced icon-left ion-minus-circled" on-tap="$event.stopPropagation(); down(model);">{{'down' | translate}}</ion-option-button>		
-	<ion-option-button class="button button-assertive icon-left ion-trash-b" on-tap="$event.stopPropagation(); delete(model);">{{'delete' | translate}}</ion-option-button>		
-	</ion-item>	
-	
-	</ion-list>
-	<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="loadMore()">
-	</ion-infinite-scroll>	
-</ion-content>
+<div class='item-content'>
+  <img src="img/favicon.png">
+  <h2>{{model.name}}</h2>
+  <p>{{model.cfg()}}</p>
+</div>
+<ion-option-button 
+  class="button button-assertive icon-left ion-trash-b"
+  on-tap="collection.remove(model)">
+  {{'delete' | translate}}
+</ion-option-button>

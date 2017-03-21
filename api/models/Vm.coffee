@@ -26,12 +26,12 @@ module.exports =
       cwd = sails.services.vm.cfgDir @
       new Promise (resolve, reject) ->
         ret = sh.exec "env VAGRANT_CWD=#{cwd} vagrant #{op}", {async: async, silent: true}, (rc, out, err) ->
-          if err?
+          if rc != 0
             return reject err
           resolve out
+        ret.stderr.pipe process.stderr
+        ret.stdout.pipe process.stdout
         if async
-          ret.stderr.pipe process.stderr
-          ret.stdout.pipe process.stdout
           resolve()
 
     status: ->
@@ -39,18 +39,16 @@ module.exports =
         .then (status) ->
           pattern = /^default[ ]*(.*)$/m
           pattern.exec(status)?[1]
-        .catch sails.log.error
     
     up: ->
       @cmd 'status'
-        .then (status) ->
+        .then (status) =>
           pattern = /^default[ ]*(.*)$/m
           if pattern.exec(status)?[1] == sails.config.vagrant.upStatus
-            console.log "vm already running"
+            sails.log.info "vm already running"
           else  
-            console.log "vm start up"
+            sails.log.info "vm start up"
             @cmd 'up', true
-        .catch sails.log.error    
         
     down: ->
       @cmd 'halt'

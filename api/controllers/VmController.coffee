@@ -1,5 +1,6 @@
+_ = require 'lodash'
 actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
-sh = require 'shelljs'
+Promise = require 'bluebird'
 
 module.exports =
   findOne: (req, res) ->
@@ -14,6 +15,34 @@ module.exports =
         res.notFound()
       .catch res.serverError
 
+  find: (req, res) ->
+    Model = actionUtil.parseModel req
+    cond = actionUtil.parseCriteria req
+
+    Promise
+      .all [
+        Model.count()
+          .where cond
+          .toPromise()
+        Model.find()
+          .where cond
+          .populateAll()
+          .limit actionUtil.parseLimit req
+          .skip actionUtil.parseSkip req
+          .sort actionUtil.parseSort req
+          .then (list) ->
+            Promise.map list, (model) ->
+              model.status()
+                .then (status) ->
+                  _.extend model, status: status
+      ]
+      .then (result) ->
+        [count, results] = result
+        res.ok
+          count: count
+          results: results
+      .catch res.serverError
+
   cmd: (req, res) ->
     pk = actionUtil.requirePk req
     sails.models.vm
@@ -22,7 +51,9 @@ module.exports =
         if vm?
           return vm[req.params.cmd]()
             .then ->
-              res.ok()
+              vm.status()
+            .then (status) ->
+              res.ok _.extend(vm, status: status)
         res.notFound()
       .catch res.serverError
 

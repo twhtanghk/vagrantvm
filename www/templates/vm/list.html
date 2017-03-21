@@ -1,10 +1,23 @@
 <ion-header-bar class="item-input-inset">
-    <button class="button button-icon button-clear ion-navicon button-stable" menu-toggle="left">
-    </button>
-    <h1 class='title'>
-    	{{'VM List' | translate}}
-    </h1>
-    <button class="button ion-plus-round button-clear button-stable" ui-sref="app.create"></button>  
+  <button class="button button-icon button-clear ion-navicon button-stable" menu-toggle="left">
+  </button>
+  <h1 class='title'>
+    {{'VM' | translate}}
+  </h1>
 </ion-header-bar>
 
-<ng-include src="'templates/vm/item.html'"></ng-include>
+<ion-content>
+  <ion-list>
+    <ion-item 
+      class="item-avatar item-complex"
+      on-hold="showAction()"
+      ng-repeat="model in collection.models"
+      ng-controller="ItemCtrl"
+      ng-include="'templates/vm/item.html'">
+    </ion-item>
+    <ion-infinite-scroll
+      ng-if="collection.state.skip < collection.state.count"
+      on-infinite="loadMore()">
+    </ion-infinite-scroll>
+  </ion-list>
+</ion-content>
