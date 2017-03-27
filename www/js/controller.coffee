@@ -23,7 +23,7 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
           ]
           buttonClicked: (index, button) ->
             if button.cmd == 'ssh'
-              window.open "#{env.vmHostUrl}/#{$scope.model.name}?port=#{$scope.model.port.ssh}"
+              window.open "#{env.sshUrl}?port=#{$scope.model.port.ssh}"
             else      
               $scope.model.cmd button.cmd
             return true
