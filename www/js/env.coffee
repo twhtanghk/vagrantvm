@@ -24,4 +24,6 @@ module.exports =
 	
 	vmStatus:
 		up: 'UP'
-		down: 'DOWN'			
+		down: 'DOWN'
+
+	vmHostUrl:	config.VM_HOST_URL || url		

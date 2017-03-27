@@ -22,7 +22,7 @@ stream = require 'stream'
 
 config = (params) ->
   _.defaults params,
-    _.pick(process.env, 'ROOTURL', 'AUTHURL', 'VERIFYURL', 'OAUTH2_SCOPE')
+    _.pick(process.env, 'ROOTURL', 'AUTHURL', 'VERIFYURL', 'OAUTH2_SCOPE', 'VM_HOST_URL')
   fs.writeFileSync 'www/js/config.json', util.inspect(params)
 
 class StringStream extends stream.Readable
