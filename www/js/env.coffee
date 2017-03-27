@@ -26,4 +26,4 @@ module.exports =
 		up: 'UP'
 		down: 'DOWN'
 
-	vmHostUrl:	config.VM_HOST_URL || url		
+	sshUrl:	config.SSHURL		
