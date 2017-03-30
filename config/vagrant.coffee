@@ -1,7 +1,6 @@
 fs = require 'fs'
 path = require 'path'
 _ = require 'lodash'
-root = process.cwd()
 url = require 'url'
 
 ['BOX', 'MEMORY', 'SSH', 'HTTP', 'ROOTURL'].map (name) ->
@@ -13,7 +12,7 @@ module.exports =
     template: ->
       _.template fs.readFileSync path.join(module.exports.vagrant.cfgPath, 'cfg.template')
     hostname: url.parse(process.env.ROOTURL).hostname
-    cfgPath: path.join root, 'config/vagrant'
+    cfgPath: path.join __dirname, '../data'
     box: process.env.BOX
     memory: parseInt process.env.MEMORY
     portStart:
