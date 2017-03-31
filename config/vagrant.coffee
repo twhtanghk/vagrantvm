@@ -12,7 +12,7 @@ module.exports =
     template: ->
       _.template fs.readFileSync path.join(module.exports.vagrant.cfgPath, 'cfg.template')
     hostname: url.parse(process.env.ROOTURL).hostname
-    cfgPath: path.join __dirname, '../data'
+    cfgPath: path.join __dirname, '../vm'
     box: process.env.BOX
     memory: parseInt process.env.MEMORY
     portStart:
