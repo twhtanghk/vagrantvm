@@ -14,18 +14,15 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
       showAction: ->
         $ionicActionSheet.show
           buttons: [
-            { text: 'SSH', cmd: 'ssh' }
-            { text: 'Up', cmd: 'up' }
-            { text: 'Down', cmd: 'down' }
-            { text: 'Resume', cmd: 'resume' }
-            { text: 'Suspend', cmd: 'suspend' }
-            { text: 'Restart', cmd: 'restart' }
+            { text: 'ssh', cmd: 'ssh' }
+            { text: 'up', cmd: 'up' }
+            { text: 'down', cmd: 'down' }
+            { text: 'resume', cmd: 'resume' }
+            { text: 'suspend', cmd: 'suspend' }
+            { text: 'restart', cmd: 'restart' }
           ]
           buttonClicked: (index, button) ->
-            if button.cmd == 'ssh'
-              window.open "#{env.sshUrl}?port=#{$scope.model.port.ssh}"
-            else      
-              $scope.model.cmd button.cmd
+            $scope.model.cmd button.cmd
             return true
 
       delete: ->

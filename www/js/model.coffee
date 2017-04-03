@@ -1,3 +1,4 @@
+env = require './config.json'
 require 'PageableAR'
 
 angular.module 'starter.model', ['PageableAR']
@@ -10,7 +11,10 @@ angular.module 'starter.model', ['PageableAR']
       $urlRoot: "api/vm"
       
       cmd: (op) ->
-        @$save {}, url: "#{@$url()}/#{op}"
+        if op == 'ssh'
+          window.open "#{env.SSHURL}?port=#{@port.ssh}"
+        else
+          @$save {}, url: "#{@$url()}/#{op}"
 
       cfg: ->
         JSON.stringify _.extend _.pick(@, 'status'), @port
