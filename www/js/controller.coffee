@@ -25,29 +25,6 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
             $scope.model.cmd button.cmd
             return true
 
-      delete: ->
-        $scope.collection.remove $scope.model
-        
-      up: ->  
-        $scope.model.up()
-          .catch $log.error
-          
-      down: ->  
-        $scope.model.down()
-          .catch $log.error
-
-      resume: ->
-        $scope.model.resume()
-          .catch $log.error
-
-      suspend: ->
-        $scope.model.suspend()
-          .catch $log.error
-
-      restart: ->
-        $scope.model.restart()
-          .catch $log.error
-     
   .controller 'ListCtrl', ($rootScope, $stateParams, $scope, collection, $location, resources, $ionicModal, $filter, FileSaver, Blob, $ionicListDelegate) ->
     _.extend $scope,
       
