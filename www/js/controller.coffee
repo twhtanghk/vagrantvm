@@ -14,6 +14,7 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
       showAction: ->
         $ionicActionSheet.show
           buttons: [
+            { text: 'SSH', cmd: 'ssh' }
             { text: 'Up', cmd: 'up' }
             { text: 'Down', cmd: 'down' }
             { text: 'Resume', cmd: 'resume' }
@@ -21,7 +22,10 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
             { text: 'Restart', cmd: 'restart' }
           ]
           buttonClicked: (index, button) ->
-            $scope.model.cmd button.cmd
+            if button.cmd == 'ssh'
+              window.open "#{env.sshUrl}?port=#{$scope.model.port.ssh}"
+            else      
+              $scope.model.cmd button.cmd
             return true
 
       delete: ->

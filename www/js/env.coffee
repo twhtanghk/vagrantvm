@@ -24,4 +24,6 @@ module.exports =
 	
 	vmStatus:
 		up: 'UP'
-		down: 'DOWN'			
+		down: 'DOWN'
+
+	sshUrl:	config.SSHURL		
