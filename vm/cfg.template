@@ -20,10 +20,12 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "libvirt" do |v|
     v.driver = "kvm"
+    v.nested = true
     v.memory = <%=memory%>
     v.connect_via_ssh = false
     v.username = "root"
     v.storage_pool_name = "default"
+    v.machine_virtual_size = <%=disk%>
   end
 
   config.vm.synced_folder '.', '/vagrant', disabled: true
