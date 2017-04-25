@@ -1,3 +1,7 @@
+['DISK', 'MEMORY'].map (name) ->
+  if not (name of process.env)
+    throw new Error "process.env.#{name} not yet defined"
+
 Promise = require 'bluebird'
 sh = require 'shelljs'
     
@@ -13,6 +17,18 @@ module.exports =
       type: 'string'
       required: true
       unique: true
+
+    # disk size in GB
+    disk:
+      type: 'integer'
+      required: true
+      defaultsTo: process.env.DISK
+
+    # memory size in MB
+    memory:
+      type: 'integer'
+      required: true
+      defaultsTo: process.env.MEMORY
 
     port:
       type: 'json'
