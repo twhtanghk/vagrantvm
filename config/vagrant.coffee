@@ -14,8 +14,6 @@ module.exports =
     hostname: url.parse(process.env.ROOTURL).hostname
     cfgPath: path.join __dirname, '../vm'
     box: process.env.BOX
-    memory: parseInt process.env.MEMORY
     portStart:
       ssh: parseInt process.env.SSH
       http: parseInt process.env.HTTP
-    upStatus: process.env.upStatus  
