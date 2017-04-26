@@ -1,11 +1,6 @@
 path = require 'path'
 config = require './config.json'
-root = require('url').parse config.ROOTURL
-url = "#{root.protocol}//#{root.host}"
-
-io.sails.url = url
-io.sails.path = path.join root.path, 'socket.io'
-io.sails.useCORSRouteToGetCookie = false
+window.io = require('sails.io.js')(require('socket.io-client'))
 
 module.exports =
 	isMobile: ->
