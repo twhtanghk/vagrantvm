@@ -3,6 +3,8 @@ describe 'service', ->
     sails.services.vm
       .create
         name: 'test'
+        memory: 1024
+        disk: 20
         port:
           ssh: 2200
           http: 8000
