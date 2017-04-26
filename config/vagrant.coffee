@@ -1,17 +1,18 @@
+os = require 'os'
 fs = require 'fs'
 path = require 'path'
 _ = require 'lodash'
 url = require 'url'
 
-['BOX', 'MEMORY', 'SSH', 'HTTP', 'ROOTURL'].map (name) ->
+['BOX', 'SSH', 'HTTP'].map (name) ->
   if not (name of process.env)
-    throw new Error 'process.env.#{name} not yet defined'
+    throw new Error "process.env.#{name} not yet defined"
 
 module.exports =
   vagrant:
     template: ->
       _.template fs.readFileSync path.join(module.exports.vagrant.cfgPath, 'cfg.template')
-    hostname: url.parse(process.env.ROOTURL).hostname
+    hostname: os.networkInterfaces()['eth0'][0].address
     cfgPath: path.join __dirname, '../vm'
     box: process.env.BOX
     portStart:
