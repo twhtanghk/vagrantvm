@@ -28,7 +28,7 @@ module.exports =
 
         # update /etc/exports
         sh
-          .echo "#{cfgDir(vm)} #{_.template(process.env.NFSOPTS)(params)}"
+          .echo "#{cfgDir(vm)} #{_.template(process.env.NFSOPTS)(params)}\n"
           .toEnd '/etc/exports'
         sh
           .exec 'exportfs -avr'
