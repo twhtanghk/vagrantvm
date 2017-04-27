@@ -1,4 +1,3 @@
-argv = require('yargs').argv
 gulp = require 'gulp'
 browserify = require 'browserify'
 streamify = require 'gulp-streamify'
@@ -6,13 +5,10 @@ source = require 'vinyl-source-stream'
 coffee = require 'gulp-coffee'
 gutil = require 'gulp-util'
 uglify = require 'gulp-uglify'
-
-bower = require 'bower'
 concat = require 'gulp-concat'
 sass = require 'gulp-sass'
 minifyCss = require 'gulp-minify-css'
 rename = require 'gulp-rename'
-bower = require 'gulp-bower'
 templateCache = require 'gulp-angular-templatecache'
 
 _ = require 'lodash'
@@ -72,9 +68,11 @@ gulp.task 'coffee', ['template'],  ->
   
   
 gulp.task 'template', ->
+  Form = require 'sails.form'
+  form = new Form
+    model: require './api/models/Vm.coffee'
+    include: ['name', 'disk', 'memory']
+  fs.writeFileSync 'www/templates/vm/createForm.html', form.html()
   gulp.src('./www/templates/**/*.html')
-  	.pipe(templateCache(root: 'templates', standalone: true))
-  	.pipe(gulp.dest('./www/js/'))
-
-
-  	
+    .pipe(templateCache(root: 'templates', standalone: true))
+    .pipe(gulp.dest('./www/js/'))
