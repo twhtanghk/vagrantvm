@@ -6,6 +6,10 @@ angular.module 'starter.model', ['PageableAR']
   .factory 'resources', (pageableAR) ->
 
     class Vm extends pageableAR.Model
+      $defaults:
+        disk: parseInt env.DISK
+        memory: parseInt env.MEMORY
+
       $idAttribute: 'id'
       
       $urlRoot: "api/vm"
