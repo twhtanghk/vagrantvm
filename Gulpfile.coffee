@@ -21,8 +21,18 @@ util = require 'util'
 stream = require 'stream'
 
 config = (params) ->
+  attrs = [
+    'AUTHURL'
+    'VERIFYURL'
+    'SCOPE'
+    'SSHURL'
+    'DISK'
+    'DISKMAX'
+    'MEMORY'
+    'MEMORYMAX'
+  ]
   _.defaults params,
-    _.pick(process.env, 'AUTHURL', 'VERIFYURL', 'SCOPE', 'SSHURL')
+    _.pick process.env, attrs
   fs.writeFileSync 'www/js/config.json', util.inspect(params)
 
 class StringStream extends stream.Readable
