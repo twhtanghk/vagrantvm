@@ -1,4 +1,9 @@
-['DISK', 'MEMORY'].map (name) ->
+[
+  'DISK'
+  'DISKMAX'
+  'MEMORY'
+  'MEMORYMAX'
+].map (name) ->
   if not (name of process.env)
     throw new Error "process.env.#{name} not yet defined"
 
@@ -96,6 +101,10 @@ module.exports =
       .catch cb
     
   beforeValidate: (values, cb) ->
+    if values.disk > process.env.DISKMAX
+      values.disk = process.env.DISKMAX
+    if values.memory > process.env.MEMORYMAX
+      values.memory = process.env.MEMORYMAX
     Vm
       .nextPort (err, port) ->
         if err?
