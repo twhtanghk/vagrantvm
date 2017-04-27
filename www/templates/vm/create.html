@@ -5,12 +5,6 @@
 	<button  class="button button-clear button-positive" ng-click="save()">Save</button>	        
   </ion-header-bar>
   <ion-content padding="true">
-	<div class="list">
-		<label class="item item-input">
-	    	<span class="input-label">Name</span>
-	    	<input type="text" ng-model="model.name">
-		</label>
-		
-	</div>
+    <ng-include src="'templates/vm/createForm.html'"></ng-include>
   </ion-content>
 </ion-view>
