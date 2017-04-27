@@ -25,7 +25,7 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
             $scope.model.cmd button.cmd
             return true
 
-  .controller 'ListCtrl', ($rootScope, $stateParams, $scope, collection, $location, resources, $ionicModal, $filter, FileSaver, Blob, $ionicListDelegate) ->
+  .controller 'ListCtrl', ($rootScope, $stateParams, $scope, $log, collection, $location, resources, $ionicModal, $filter, FileSaver, Blob, $ionicListDelegate) ->
     _.extend $scope,
       
       collection: collection
@@ -34,9 +34,9 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
         collection.$fetch()
           .then ->
             $scope.$broadcast('scroll.infiniteScrollComplete')
-          .catch alert
+          .catch $log.error
               
-  .controller 'VmCtrl', ($rootScope, $scope, model, $location, Upload) ->
+  .controller 'VmCtrl', ($rootScope, $scope, model, $location, $log, Upload) ->
     _.extend $scope,
       model: model
       
@@ -44,5 +44,4 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
         $scope.model.$save()
           .then ->
             $location.url "/list"
-          .catch (err) ->
-            alert {data:{error: "VM already exist."}}  
+          .catch $log.error
