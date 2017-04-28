@@ -28,12 +28,16 @@ module.exports =
       type: 'integer'
       required: true
       defaultsTo: process.env.DISK
+      min: process.env.DISK
+      max: process.env.DISKMAX
 
     # memory size in MB
     memory:
       type: 'integer'
       required: true
       defaultsTo: process.env.MEMORY
+      min: process.env.MEMORY
+      max: process.env.MEMORYMAX
 
     port:
       type: 'json'
