@@ -14,6 +14,14 @@ iframe {
   height: 100%;	
 }
 
-label span.input-label {
-  text-transform: capitalize;
+label {
+  span.input-label {
+    text-transform: capitalize;
+  }
+  span.input-label[aria-label=disk]:after {
+    content: " (GB)";
+  }
+  span.input-label[aria-label=memory]:after {
+    content: " (MB)";
+  }
 }
