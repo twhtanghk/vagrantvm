@@ -43,6 +43,12 @@ module.exports =
     'PUT /api/vm/:id/resume':
       controller: 'VmController'
       action: 'resume'
+    'GET /api/vm/:id/backup':
+      controller: 'VmController'
+      action: 'backup'
+    'PUT /api/vm/:id/restore':
+      controller: 'VmController'
+      action: 'restore'
     'DELETE /api/vm/:id':
       controller: 'VmController'
       action: 'destroy'
