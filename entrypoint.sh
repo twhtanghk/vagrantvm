@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo '/usr/src/app/vm *(rw,no_subtree_check,no_root_squash,fsid=0)' >>/etc/exports
+echo '/usr/src/app/vm/data *(rw,no_subtree_check,no_root_squash,fsid=0)' >>/etc/exports
 rpcbind
 rpc.statd
 rpc.nfsd
