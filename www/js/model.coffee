@@ -15,10 +15,15 @@ angular.module 'starter.model', ['PageableAR']
       $urlRoot: "api/vm"
       
       cmd: (op) ->
-        if op == 'ssh'
-          window.open "#{env.SSHURL}?port=#{@port.ssh}"
-        else
-          @$save {}, url: "#{@$url()}/#{op}"
+        switch op
+          when 'ssh'
+            window.open "#{env.SSHURL}?port=#{@port.ssh}"
+          when 'backup'
+            @$fetch url: "#{@$url()}/#{op}" 
+          when 'restore'
+            @$save {}, url: "#{@$url()}/#{op}"
+          else
+            @$save {}, url: "#{@$url()}/#{op}"
 
       cfg: ->
         JSON.stringify _.extend _.pick(@, 'status', 'memory', 'disk'), @port

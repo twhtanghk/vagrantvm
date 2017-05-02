@@ -19,7 +19,8 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
             { text: 'down', cmd: 'down' }
             { text: 'resume', cmd: 'resume' }
             { text: 'suspend', cmd: 'suspend' }
-            { text: 'restart', cmd: 'restart' }
+            { text: 'backup', cmd: 'backup' }
+            { text: 'restore', cmd: 'restore' }
           ]
           buttonClicked: (index, button) ->
             $scope.model.cmd button.cmd
