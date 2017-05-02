@@ -60,7 +60,7 @@ module.exports =
       required:  true
 
     cmd: (op, async = false) ->
-      cmd = "env VAGRANT_CWD=#{module.exports.cfgDir()} vagrant #{op}"
+      cmd = "env VAGRANT_CWD=#{module.exports.cfgDir @} vagrant #{op}"
       if 'status'
         sh.execAsync cmd
       else 
@@ -102,10 +102,10 @@ module.exports =
       @cmd 'destroy'
             
     backup: ->
-      @sh.execAsync sails.config.vagrant.cmd.backup cwd: module.exports.dataDir()
+      sh.execAsync sails.config.vagrant.cmd.backup cwd: module.exports.dataDir @
 
     restore: ->
-      @sh.execAsync sails.config.vagrant.cmd.restore cwd: module.exports.dataDir()
+      sh.execAsync sails.config.vagrant.cmd.restore cwd: module.exports.dataDir @
 
   nextPort: (cb) ->
     Vm
@@ -162,21 +162,26 @@ module.exports =
       .find criteria
       .then (vmlist) ->
         Promise.map vmlist, (vm) ->
-          try
-            # delete vm home folder
-            sh
-              .rm '-rf', module.exports.dataDir vm
+          vm
+            .down()
+            .then ->
+              vm.destroy()
+            .then ->
+              try
+                # delete vm home folder
+                sh
+                  .rm '-rf', module.exports.cfgDir vm
 
-            # delete nfs exports entry for vm
-            sh
-              .grep '-v', module.exports.dataDir(vm), '/etc/exports'
-              .to "/tmp/#{vm.name}.tmp"
-            sh
-              .mv "/tmp/#{vm.name}.tmp", '/etc/exports'
-            sh
-              .exec 'exportfs -avr'
-          catch e
-            Promise.reject e
+                # delete nfs exports entry for vm
+                sh
+                  .grep '-v', module.exports.dataDir(vm), '/etc/exports'
+                  .to "/tmp/#{vm.name}.tmp"
+                sh
+                  .mv "/tmp/#{vm.name}.tmp", '/etc/exports'
+                sh
+                  .exec 'exportfs -avr'
+              catch e
+                Promise.reject e
       .then ->
         cb()
       .catch cb
