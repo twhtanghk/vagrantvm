@@ -39,10 +39,8 @@
     "util.auth": "*"
   },
   "resolutions": {
-    "sails.io.js": "~0.13.6",
     "angular-animate": "1.5.3",
     "angular": "1.5.3",
-    "angular-ui-router": "~0.2.15",
-    "ngInfiniteScroll": "1.2.1"
+    "angular-ui-router": "~0.2.15"
   }
 }
