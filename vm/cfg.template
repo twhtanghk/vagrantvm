@@ -6,7 +6,7 @@ echo vagrant:vagrant |chpasswd
 service ssh restart
 echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf
 mkdir /vagrant
-echo '<%=hostname%>:/<%=name%> /vagrant nfs4 nolock 0 2' >>/etc/fstab
+echo '<%=hostname%>:/<%=name%>/data /vagrant nfs4 nolock 0 2' >>/etc/fstab
 SCRIPT
 
 Vagrant.configure("2") do |config|
