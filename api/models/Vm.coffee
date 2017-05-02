@@ -3,12 +3,24 @@
   'DISKMAX'
   'MEMORY'
   'MEMORYMAX'
+  'NFSOPTS'
 ].map (name) ->
   if not (name of process.env)
     throw new Error "process.env.#{name} not yet defined"
 
+_ = require 'lodash'
 Promise = require 'bluebird'
 sh = require 'shelljs'
+sh.execAsync = (cmd, async = false) ->
+  new Promise (resolve, reject) ->
+    ret = sh.exec cmd, {aysnc: async, silent: true}, (rc, out, err) ->
+      if rc != 0
+        return reject err
+      resolve out
+    ret.stderr.pipe process.stderr
+    ret.stdout.pipe process.stdout
+    if async
+      resolve()
     
 module.exports =
 
@@ -48,16 +60,16 @@ module.exports =
       required:  true
 
     cmd: (op, async = false) ->
-      cwd = sails.services.vm.cfgDir @
-      new Promise (resolve, reject) ->
-        ret = sh.exec "env VAGRANT_CWD=#{cwd} vagrant #{op}", {async: async, silent: true}, (rc, out, err) ->
-          if rc != 0
-            return reject err
-          resolve out
-        ret.stderr.pipe process.stderr
-        ret.stdout.pipe process.stdout
-        if async
-          resolve()
+      cwd = sails.config.vagrant.cfgDir @name
+      cmd = "env VAGRANT_CWD=#{cwd} vagrant #{op}"
+      if 'status'
+        sh.execAsync cmd
+      else 
+        sh.execAsync cmd
+          .then =>
+            @status()
+          .then (status) =>
+            Promise.resolve _.extend @, status: status
 
     status: ->
       @cmd 'status'
@@ -90,6 +102,12 @@ module.exports =
     destroy: ->
       @cmd 'destroy'
             
+    backup: ->
+      @sh.execAsync sails.config.vagrant.cmd.backup cwd: sails.config.vagrant.cfgPath, name: @name
+
+    restore: ->
+      @sh.execAsync sails.config.vagrant.cmd.restore cwd: sails.config.vagrant.cfgPath, name: @name
+
   nextPort: (cb) ->
     Vm
       .find()
@@ -116,25 +134,56 @@ module.exports =
         values.port = port
         cb()
       
-  afterCreate: (values, cb) ->
-    sails.services.vm
-      .create values
-      .then ->
-        cb()
-      .catch cb
+  beforeCreate: (values, cb) ->
+    cfgDir = sails.config.vagrant.cfgDir values.name
+    cfgFile = sails.config.vagrant.cfgDir values.name, 'Vagrantfile'
+    dataDir = sails.config.vagrant.cfgDir values.name, 'data'
+    params = _.extend sails.config.vagrant, values
+
+    try
+      # create vm home folder
+      sh
+        .mkdir '-p', dataDir
+
+      # create Vagrantfile
+      sh
+        .echo sails.config.vagrant.template()(params)
+        .to path.join cfgFile
+
+      # update /etc/exports
+      sh
+        .echo "#{dataDir} #{_.template(process.env.NFSOPTS)(params)}\n"
+        .toEnd '/etc/exports'
+      sh
+        .exec 'exportfs -avr'
+
+      cb()
+    catch e
+      cb e
 
   beforeDestroy: (criteria, cb) ->
     sails.models.vm
       .find criteria
       .then (vmlist) ->
         Promise.map vmlist, (vm) ->
-          vm
-            .down()
-            .then ->
-              vm.destroy()
-            .then ->
-              sails.services.vm
-                .destroy vm
+          cfgDir = sails.config.vagrant.cfgDir vm.name
+          dataDir = sails.config.vagrant.cfgDir vm.name, 'data'
+
+          try
+            # delete vm home folder
+            sh
+              .rm '-rf', cfgDir
+
+            # delete nfs exports entry for vm
+            sh
+              .grep '-v', dataDir, '/etc/exports'
+              .to "/tmp/#{vm.name}.tmp"
+            sh
+              .mv "/tmp/#{vm.name}.tmp", '/etc/exports'
+            sh
+              .exec 'exportfs -avr'
+          catch e
+            Promise.reject e
       .then ->
         cb()
       .catch cb
