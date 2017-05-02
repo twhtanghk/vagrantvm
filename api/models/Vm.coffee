@@ -60,8 +60,7 @@ module.exports =
       required:  true
 
     cmd: (op, async = false) ->
-      cwd = sails.config.vagrant.cfgDir @name
-      cmd = "env VAGRANT_CWD=#{cwd} vagrant #{op}"
+      cmd = "env VAGRANT_CWD=#{module.exports.cfgDir()} vagrant #{op}"
       if 'status'
         sh.execAsync cmd
       else 
@@ -103,10 +102,10 @@ module.exports =
       @cmd 'destroy'
             
     backup: ->
-      @sh.execAsync sails.config.vagrant.cmd.backup cwd: sails.config.vagrant.cfgPath, name: @name
+      @sh.execAsync sails.config.vagrant.cmd.backup cwd: module.exports.dataDir()
 
     restore: ->
-      @sh.execAsync sails.config.vagrant.cmd.restore cwd: sails.config.vagrant.cfgPath, name: @name
+      @sh.execAsync sails.config.vagrant.cmd.restore cwd: module.exports.dataDir()
 
   nextPort: (cb) ->
     Vm
@@ -135,24 +134,21 @@ module.exports =
         cb()
       
   beforeCreate: (values, cb) ->
-    cfgDir = sails.config.vagrant.cfgDir values.name
-    cfgFile = sails.config.vagrant.cfgDir values.name, 'Vagrantfile'
-    dataDir = sails.config.vagrant.cfgDir values.name, 'data'
     params = _.extend sails.config.vagrant, values
 
     try
       # create vm home folder
       sh
-        .mkdir '-p', dataDir
+        .mkdir '-p', module.exports.dataDir values
 
       # create Vagrantfile
       sh
         .echo sails.config.vagrant.template()(params)
-        .to path.join cfgFile
+        .to module.exports.cfgFile values
 
       # update /etc/exports
       sh
-        .echo "#{dataDir} #{_.template(process.env.NFSOPTS)(params)}\n"
+        .echo "#{module.exports.dataDir values} #{_.template(process.env.NFSOPTS)(params)}\n"
         .toEnd '/etc/exports'
       sh
         .exec 'exportfs -avr'
@@ -166,17 +162,14 @@ module.exports =
       .find criteria
       .then (vmlist) ->
         Promise.map vmlist, (vm) ->
-          cfgDir = sails.config.vagrant.cfgDir vm.name
-          dataDir = sails.config.vagrant.cfgDir vm.name, 'data'
-
           try
             # delete vm home folder
             sh
-              .rm '-rf', cfgDir
+              .rm '-rf', module.exports.dataDir vm
 
             # delete nfs exports entry for vm
             sh
-              .grep '-v', dataDir, '/etc/exports'
+              .grep '-v', module.exports.dataDir(vm), '/etc/exports'
               .to "/tmp/#{vm.name}.tmp"
             sh
               .mv "/tmp/#{vm.name}.tmp", '/etc/exports'
@@ -187,3 +180,12 @@ module.exports =
       .then ->
         cb()
       .catch cb
+
+  cfgFile: (vm) ->
+    path.join module.exports.cfgDir(vm), 'Vagrantfile'
+
+  cfgDir: (vm) ->
+    sails.config.vagrant.cfgDir 'data', vm.name
+    
+  dataDir: (vm) ->
+    path.join module.exports.cfgDir(vm), 'data'
