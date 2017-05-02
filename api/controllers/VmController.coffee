@@ -50,10 +50,7 @@ module.exports =
       .then (vm) ->
         if vm?
           return vm[req.params.cmd]()
-            .then ->
-              vm.status()
-            .then (status) ->
-              res.ok _.extend(vm, status: status)
+            .then res.ok
         res.notFound()
       .catch res.serverError
 
@@ -75,4 +72,12 @@ module.exports =
 
   resume: (req, res) ->
     req.params.cmd = 'resume'
+    module.exports.cmd req, res
+
+  backup: (req, res) ->
+    req.params.cmd = 'backup'
+    module.exports.cmd req, res
+
+  restore: (req, res) ->
+    req.params.cmd = 'restore'
     module.exports.cmd req, res
