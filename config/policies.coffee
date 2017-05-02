@@ -10,6 +10,8 @@ module.exports =
       restart: ['isAuth', 'isOwner']
       suspend: ['isAuth', 'isOwner']
       resume: ['isAuth', 'isOwner']
+      backup: ['isAuth', 'isOwner']
+      restore: ['isAuth', 'isOwner']
       destroy: ['isAuth', 'isOwner']
     UserController:
       '*': false
