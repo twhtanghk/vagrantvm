@@ -67,7 +67,8 @@ module.exports =
       else 
         sh
           .execAsync cmd, async
-          .then @status
+          .then =>
+            @status()
           .then (status) =>
             Promise.resolve _.extend @, status: status
 
