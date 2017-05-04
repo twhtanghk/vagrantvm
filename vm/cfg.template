@@ -10,6 +10,8 @@ echo '<%=hostname%>:/<%=name%>/data /vagrant nfs4 nolock 0 2' >>/etc/fstab
 SCRIPT
 
 Vagrant.configure("2") do |config|
+  config.vm.hostname = "<%=name%>"
+
   config.vm.box = "<%=box%>"
 
   config.vm.network "forwarded_port", guest: 1337, host_ip: "<%=hostname%>", host: <%=port.http%>
