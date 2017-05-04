@@ -9,6 +9,7 @@
     throw new Error "process.env.#{name} not yet defined"
 
 _ = require 'lodash'
+path = require 'path'
 Promise = require 'bluebird'
 sh = require 'shelljs'
 sh.execAsync = (cmd, async = false) ->
@@ -61,12 +62,12 @@ module.exports =
 
     cmd: (op, async = false) ->
       cmd = "env VAGRANT_CWD=#{module.exports.cfgDir @} vagrant #{op}"
-      if 'status'
+      if op == 'status'
         sh.execAsync cmd
       else 
-        sh.execAsync cmd
-          .then =>
-            @status()
+        sh
+          .execAsync cmd, async
+          .then @status
           .then (status) =>
             Promise.resolve _.extend @, status: status
 
@@ -77,13 +78,11 @@ module.exports =
           pattern.exec(status)?[1]
     
     up: ->
-      @cmd 'status'
+      @status()
         .then (status) =>
-          pattern = /^default[ ]*(.*)$/m
-          if pattern.exec(status)?[1] == sails.config.vagrant.upStatus
-            sails.log.info "vm already running"
+          if status == 'running (libvirt)'
+            Promise.resolve @
           else  
-            sails.log.info "vm start up"
             @cmd 'up', true
         
     down: ->
