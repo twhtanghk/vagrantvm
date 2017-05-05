@@ -18,10 +18,8 @@ sh.execAsync = (cmd, async = false) ->
       if rc != 0
         return reject err
       resolve out
-    ret.stderr.pipe process.stderr
-    ret.stdout.pipe process.stdout
     if async
-      resolve()
+      resolve ret
     
 module.exports =
 
@@ -102,10 +100,10 @@ module.exports =
       @cmd 'destroy'
             
     backup: ->
-      sh.execAsync sails.config.vagrant.cmd.backup cwd: module.exports.dataDir @
+      sh.execAsync sails.config.vagrant.cmd.backup(cwd: module.exports.dataDir @), true
 
     restore: ->
-      sh.execAsync sails.config.vagrant.cmd.restore cwd: module.exports.dataDir @
+      sh.execAsync sails.config.vagrant.cmd.restore(cwd: module.exports.dataDir @), true
 
   nextPort: (cb) ->
     Vm
