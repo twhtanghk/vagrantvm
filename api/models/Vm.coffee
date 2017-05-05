@@ -106,7 +106,7 @@ module.exports =
       sh.execAsync sails.config.vagrant.cmd.backup(cwd: module.exports.dataDir @), { async: true, encoding: 'buffer' }
 
     restore: ->
-      sh.execAsync sails.config.vagrant.cmd.restore(cwd: module.exports.dataDir @), { async: true }
+      sh.execAsync sails.config.vagrant.cmd.restore(cwd: module.exports.dataDir @), { async: true, encoding: 'buffer' }
 
   nextPort: (cb) ->
     Vm

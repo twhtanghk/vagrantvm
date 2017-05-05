@@ -2,7 +2,13 @@ env = require './env.coffee'
 
 require './model.coffee'
 
-angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCordova',  'starter.model', 'platform']
+angular.module 'starter.controller', [
+  'ionic'
+  'http-auth-interceptor'
+  'ngCordova'
+  'starter.model'
+  'platform'
+]
 
   .controller 'MenuCtrl', ($scope) ->
     $scope.env = env
@@ -19,8 +25,6 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
             { text: 'down', cmd: 'down' }
             { text: 'resume', cmd: 'resume' }
             { text: 'suspend', cmd: 'suspend' }
-            { text: 'backup', cmd: 'backup' }
-            { text: 'restore', cmd: 'restore' }
           ]
           buttonClicked: (index, button) ->
             $scope.model.cmd button.cmd
@@ -37,7 +41,7 @@ angular.module 'starter.controller', [ 'ionic', 'http-auth-interceptor', 'ngCord
             $scope.$broadcast('scroll.infiniteScrollComplete')
           .catch $log.error
               
-  .controller 'VmCtrl', ($rootScope, $scope, model, $location, $log, Upload) ->
+  .controller 'VmCtrl', ($rootScope, $scope, model, $location, $log) ->
     _.extend $scope,
       model: model
       

@@ -35,6 +35,7 @@
     "mocha": "^3.2.0",
     "modernizr": "^3.3.1",
     "needle": "^1.3.0",
+    "ng-file-upload": "^12.2.13",
     "oauth2_client": "0.0.2",
     "parsed-url": "0.0.0",
     "passport": "^0.3.2",

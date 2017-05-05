@@ -1,10 +1,16 @@
 env = require './config.json'
 require 'PageableAR'
 require 'angular-file-saver'
+require 'ng-file-upload'
 
-angular.module 'starter.model', ['PageableAR', 'ngFileSaver']
+angular
+  .module 'starter.model', [
+    'PageableAR'
+    'ngFileSaver'
+    'ngFileUpload'
+  ]
 
-  .factory 'resources', (pageableAR, $http, FileSaver) ->
+  .factory 'resources', (pageableAR, $http, FileSaver, Upload) ->
 
     class Vm extends pageableAR.Model
       $defaults:
@@ -15,7 +21,7 @@ angular.module 'starter.model', ['PageableAR', 'ngFileSaver']
       
       $urlRoot: "api/vm"
       
-      cmd: (op) ->
+      cmd: (op, files) ->
         switch op
           when 'ssh'
             window.open "#{env.SSHURL}?port=#{@port.ssh}"
@@ -26,7 +32,11 @@ angular.module 'starter.model', ['PageableAR', 'ngFileSaver']
                 filename = res.headers('Content-Disposition').match(/filename="(.+)"/)[1]
                 FileSaver.saveAs res.data, filename
           when 'restore'
-            @$save {}, url: "#{@$url()}/#{op}"
+            if files.length != 0
+              Upload.upload 
+                method: 'PUT'
+                url: "#{@$url()}/#{op}"
+                data: file: files[0]
           else
             @$save {}, url: "#{@$url()}/#{op}"
 

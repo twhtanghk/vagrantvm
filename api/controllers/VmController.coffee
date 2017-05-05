@@ -111,6 +111,15 @@ module.exports =
     req.params.cmd = 'restore'
     module.exports
       .cmd req
-      .then res.ok
-      .catch (err) ->
-        reject err, res
+      .then (process) ->
+        new Promise (resolve, reject) ->
+          req
+            .file 'file'
+            .on 'error', reject
+            .on 'data', (file) ->
+              file
+                .on 'error', reject   
+                .pipe process.stdin
+                .on 'close', resolve
+                .on 'error', reject
+      .then res.ok, res.serverError
