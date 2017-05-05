@@ -12,14 +12,17 @@ _ = require 'lodash'
 path = require 'path'
 Promise = require 'bluebird'
 sh = require 'shelljs'
-sh.execAsync = (cmd, async = false) ->
+sh.execAsync = (cmd, opts = {}) ->
+  _.defaults opts,
+    async: false
+    silent: true
+  if opts.async
+    return Promise.resolve sh.exec cmd, opts
   new Promise (resolve, reject) ->
-    ret = sh.exec cmd, {aysnc: async, silent: true}, (rc, out, err) ->
+    sh.exec cmd, opts, (rc, out, err) ->
       if rc != 0
         return reject err
       resolve out
-    if async
-      resolve ret
     
 module.exports =
 
@@ -58,13 +61,13 @@ module.exports =
       model: 'user'
       required:  true
 
-    cmd: (op, async = false) ->
+    cmd: (op, opts = {}) ->
       cmd = "env VAGRANT_CWD=#{module.exports.cfgDir @} vagrant #{op}"
       if op == 'status'
         sh.execAsync cmd
       else 
         sh
-          .execAsync cmd, async
+          .execAsync cmd, opts
           .then =>
             @status()
           .then (status) =>
@@ -100,10 +103,10 @@ module.exports =
       @cmd 'destroy'
             
     backup: ->
-      sh.execAsync sails.config.vagrant.cmd.backup(cwd: module.exports.dataDir @), true
+      sh.execAsync sails.config.vagrant.cmd.backup(cwd: module.exports.dataDir @), { async: true, encoding: 'buffer' }
 
     restore: ->
-      sh.execAsync sails.config.vagrant.cmd.restore(cwd: module.exports.dataDir @), true
+      sh.execAsync sails.config.vagrant.cmd.restore(cwd: module.exports.dataDir @), { async: true }
 
   nextPort: (cb) ->
     Vm
