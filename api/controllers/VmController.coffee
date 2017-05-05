@@ -1,6 +1,11 @@
 _ = require 'lodash'
 actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
 Promise = require 'bluebird'
+notFound = new Error 'not found'
+reject = (err, res) ->
+  if err == notFound
+    return res.notFound()
+  res.serverError err
 
 module.exports =
   findOne: (req, res) ->
@@ -50,34 +55,62 @@ module.exports =
       .then (vm) ->
         if vm?
           return vm[req.params.cmd]()
-            .then res.ok
-        res.notFound()
-      .catch res.serverError
+        Promise.reject notFound
 
   up: (req, res) ->
     req.params.cmd = 'up'
-    module.exports.cmd req, res
+    module.exports
+      .cmd req
+      .then res.ok
+      .catch (err) ->
+        reject err, res
 
   down: (req, res) ->
     req.params.cmd = 'down'
-    module.exports.cmd req, res
+    module.exports
+      .cmd req
+      .then res.ok
+      .catch (err) ->
+        reject err, res
 
   restart: (req, res) ->
     req.params.cmd = 'restart'
-    module.exports.cmd req, res
+    module.exports
+      .cmd req
+      .then res.ok
+      .catch (err) ->
+        reject err, res
 
   suspend: (req, res) ->
     req.params.cmd = 'suspend'
-    module.exports.cmd req, res
+    module.exports
+      .cmd req
+      .then res.ok
+      .catch (err) ->
+        reject err, res
 
   resume: (req, res) ->
     req.params.cmd = 'resume'
-    module.exports.cmd req, res
+    module.exports
+      .cmd req
+      .then res.ok
+      .catch (err) ->
+        reject err, res
 
   backup: (req, res) ->
     req.params.cmd = 'backup'
-    module.exports.cmd req, res
+    module.exports
+      .cmd req
+      .then (process) ->
+        res.attachment "backup.tar.xz"
+        process.stdout.pipe res
+      .catch (err) ->
+        reject err, res
 
   restore: (req, res) ->
     req.params.cmd = 'restore'
-    module.exports.cmd req, res
+    module.exports
+      .cmd req
+      .then res.ok
+      .catch (err) ->
+        reject err, res
