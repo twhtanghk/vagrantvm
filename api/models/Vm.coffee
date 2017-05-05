@@ -71,7 +71,7 @@ module.exports =
           .then =>
             @status()
           .then (status) =>
-            Promise.resolve _.extend @, status: status
+            Promise.resolve _.extend status: status, @
 
     status: ->
       @cmd 'status'
@@ -83,9 +83,9 @@ module.exports =
       @status()
         .then (status) =>
           if status == 'running (libvirt)'
-            Promise.resolve @
+            Promise.resolve _.extend status: status, @
           else  
-            @cmd 'up', true
+            @cmd 'up', async: true
         
     down: ->
       @cmd 'halt'
