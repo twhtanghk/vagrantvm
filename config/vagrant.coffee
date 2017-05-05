@@ -26,5 +26,5 @@ module.exports =
       ssh: parseInt process.env.SSH
       http: parseInt process.env.HTTP
     cmd:
-      backup: _.template "tar -C <%=cwd%> -cJf - <%=name%>" 
-      restore: _.template "tar -C <%=cwd%> -xJf -"
+      backup: _.template "tar -C <%=cwd%> -cJf - ." 
+      restore: _.template "tar -C <%=cwd%> -xJf - ."
