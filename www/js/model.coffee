@@ -1,9 +1,10 @@
 env = require './config.json'
 require 'PageableAR'
+require 'angular-file-saver'
 
-angular.module 'starter.model', ['PageableAR']
+angular.module 'starter.model', ['PageableAR', 'ngFileSaver']
 
-  .factory 'resources', (pageableAR) ->
+  .factory 'resources', (pageableAR, $http, FileSaver) ->
 
     class Vm extends pageableAR.Model
       $defaults:
@@ -19,7 +20,11 @@ angular.module 'starter.model', ['PageableAR']
           when 'ssh'
             window.open "#{env.SSHURL}?port=#{@port.ssh}"
           when 'backup'
-            @$fetch url: "#{@$url()}/#{op}" 
+            $http
+              .get "#{@$url()}/#{op}", responseType: 'blob'
+              .then (res) ->
+                filename = res.headers('Content-Disposition').match(/filename="(.+)"/)[1]
+                FileSaver.saveAs res.data, filename
           when 'restore'
             @$save {}, url: "#{@$url()}/#{op}"
           else
