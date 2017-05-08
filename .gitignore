@@ -123,7 +123,6 @@ nbproject
 
 /template
 /uploads/**
-/www/css/**
 /www/lib
 /www/js/*.js
 /*.orig
