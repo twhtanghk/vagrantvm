@@ -6,7 +6,7 @@ module.exports =
       action: 'find'
       sort:
         email: 'desc'
-    'GET /api/user/:email':
+    'GET /api/user/:id':
       controller: 'UserController'
       action: 'findOne'
 
