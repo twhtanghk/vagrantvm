@@ -1,4 +1,5 @@
 env = require './config.json'
+_ = require 'lodash'
 require 'PageableAR'
 require 'angular-file-saver'
 require 'ng-file-upload'
@@ -10,7 +11,7 @@ angular
     'ngFileUpload'
   ]
 
-  .factory 'resources', (pageableAR, $http, FileSaver, Upload) ->
+  .factory 'resources', (pageableAR, $http, $log, FileSaver, Upload) ->
 
     class Vm extends pageableAR.Model
       $defaults:
@@ -33,10 +34,15 @@ angular
                 FileSaver.saveAs res.data, filename
           when 'restore'
             if files.length != 0
-              Upload.upload 
-                method: 'PUT'
-                url: "#{@$url()}/#{op}"
-                data: file: files[0]
+              Upload
+                .upload 
+                  method: 'PUT'
+                  url: "#{@$url()}/#{op}"
+                  data: file: files[0]
+                .then ->
+                  $log.info "Restore completed"
+                .catch (res) ->
+                  $log.error res.data
           else
             @$save {}, url: "#{@$url()}/#{op}"
 
