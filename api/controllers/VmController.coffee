@@ -120,6 +120,12 @@ module.exports =
               file
                 .on 'error', reject   
                 .pipe process.stdin
-                .on 'close', resolve
-                .on 'error', reject
+          process
+            .on 'close', (rc) ->
+              if rc == 0
+                return resolve()
+              reject "Restore with error code #{rc}"
+          process.stderr
+            .on 'data', (err) ->
+              reject err.toString()
       .then res.ok, res.serverError
