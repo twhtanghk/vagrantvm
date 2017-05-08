@@ -1,18 +1,21 @@
 env = require './env.coffee'
-
+_ = require 'lodash'
+require 'angular-http-auth'
 require './model.coffee'
 
-angular.module 'starter.controller', [
-  'ionic'
-  'http-auth-interceptor'
-  'ngCordova'
-  'starter.model'
-  'platform'
-]
+angular
+  .module 'starter.controller', [
+    'ionic'
+    'http-auth-interceptor'
+    'ngCordova'
+    'starter.model'
+  ]
 
-  .controller 'MenuCtrl', ($scope) ->
-    $scope.env = env
-    $scope.navigator = navigator
+  .controller 'MenuCtrl', ($scope, model) ->
+    _.extend $scope,
+      env: env
+      navigator: navigator
+      model: model
 
   .controller 'ItemCtrl', ($scope, $log, $ionicActionSheet) ->
     _.extend $scope, 
