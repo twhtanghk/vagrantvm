@@ -52,4 +52,5 @@ angular
         $scope.model.$save()
           .then ->
             $location.url "/list"
-          .catch $log.error
+          .catch (err) ->
+            $log.error err.data?.message || JSON.stringify msg

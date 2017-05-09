@@ -36,6 +36,7 @@ module.exports =
       type: 'string'
       required: true
       unique: true
+      alphanumeric: true
 
     # disk size in GB
     disk:
