@@ -6,14 +6,17 @@ RUN apt-get update \
 &&  apt-get clean \
 &&  usermod -a -G libvirt-qemu root
 
-RUN curl -O https://releases.hashicorp.com/vagrant/1.9.1/vagrant_1.9.1_x86_64.deb \
-&&  dpkg -i vagrant_1.9.1_x86_64.deb \
-&&  rm vagrant_1.9.1_x86_64.deb \
+ENV VAGRANT_VER=1.9.7
+ENV VAGRANT_FILE=vagrant_${VAGRANT_VER}_x86_64.deb
+ENV VAGRANT_URL=https://releases.hashicorp.com/vagrant/${VAGRANT_VER}/${VAGRANT_FILE}
+RUN curl -O ${VAGRANT_URL} \
+&&  dpkg -i ${VAGRANT_FILE} \
+&&  rm ${VAGRANT_FILE} \
 &&  vagrant plugin install vagrant-libvirt
 
 # web app
 ENV VER=${VER:-master} \
-    REPO=https://github.com/dorissschoi/vagrantvm \
+    REPO=https://github.com/twhtanghk/vagrantvm \
     APP=/usr/src/app
 
 RUN git clone -b $VER $REPO $APP
