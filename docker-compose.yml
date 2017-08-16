@@ -11,6 +11,7 @@ services:
       - ./data/vm:/usr/src/app/vm/data
       - ./data/exports:/etc/exports
       - ./data/boxes:/root/.vagrant.d/boxes
+      - ./data/qemu:/etc/libvirt/qemu
     env_file: 
       - ./.env
       - ../.env
