@@ -17,6 +17,7 @@ module.exports =
   vagrant:
     template: ->
       _.template fs.readFileSync path.join(module.exports.vagrant.cfgPath, 'cfg.template')
+    net: process.env.NET
     hostname: ip.or ip.cidr(process.env.NET), '0.0.0.1'
     cfgPath: path.join __dirname, '../vm'
     cfgDir: (dir...) ->
