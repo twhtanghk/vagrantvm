@@ -47,6 +47,7 @@
     "rework-npm": "^1.0.0",
     "sails": "~0.12.13",
     "sails-disk": "^0.10.10",
+    "sails-hook-mongo-auto-index": "git+https://github.com/twhtanghk/sails-hook-mongo-auto-index.git",
     "sails-hook-requestlogger-file": "^2.0.5",
     "sails.form": "0.0.1",
     "shelljs": "^0.7.7",
