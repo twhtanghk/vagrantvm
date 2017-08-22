@@ -1,4 +1,4 @@
-os = require 'os'
+ip = require 'ip'
 fs = require 'fs'
 path = require 'path'
 _ = require 'lodash'
@@ -8,6 +8,7 @@ url = require 'url'
   'BOX'
   'SSH'
   'HTTP'
+  'NET'
 ].map (name) ->
   if not (name of process.env)
     throw new Error "process.env.#{name} not yet defined"
@@ -16,7 +17,7 @@ module.exports =
   vagrant:
     template: ->
       _.template fs.readFileSync path.join(module.exports.vagrant.cfgPath, 'cfg.template')
-    hostname: os.networkInterfaces()[process.env.INTERFACE || 'eth0'][0].address
+    hostname: ip.or ip.cidr(process.env.NET), '0.0.0.1'
     cfgPath: path.join __dirname, '../vm'
     cfgDir: (dir...) ->
       dir.unshift module.exports.vagrant.cfgPath
