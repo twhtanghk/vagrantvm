@@ -6,7 +6,7 @@ echo vagrant:vagrant |chpasswd
 service ssh restart
 echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf
 mkdir /vagrant
-echo '<%=hostname%>:/<%=name%>/data /vagrant nfs4 nolock 0 2' >>/etc/fstab
+echo '<%=ip.nfs%>:/<%=name%>/data /vagrant nfs4 nolock 0 2' >>/etc/fstab
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -14,8 +14,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = "<%=box%>"
 
-  config.vm.network "forwarded_port", guest: 1337, host_ip: "<%=hostname%>", host: <%=port.http%>
-  config.vm.network "forwarded_port", guest: 22, host_ip: "<%=hostname%>", host: <%=port.ssh%>
+  config.vm.network "forwarded_port", guest: 1337, host_ip: "<%=ip.vm%>", host: <%=port.http%>
+  config.vm.network "forwarded_port", guest: 22, host_ip: "<%=ip.vm%>", host: <%=port.ssh%>
 
   config.vm.provision "shell", inline: $sshcfg
   config.vm.provision "docker"
