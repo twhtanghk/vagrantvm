@@ -1,4 +1,5 @@
 ip = require 'ip'
+os = require 'os'
 fs = require 'fs'
 path = require 'path'
 _ = require 'lodash'
@@ -18,7 +19,9 @@ module.exports =
     template: ->
       _.template fs.readFileSync path.join(module.exports.vagrant.cfgPath, 'cfg.template')
     net: process.env.NET
-    hostname: ip.or ip.cidr(process.env.NET), '0.0.0.1'
+    ip:
+      nfs: ip.or ip.cidr(process.env.NET), '0.0.0.1'
+      vm: os.networkInterfaces()[process.env.INTERFACE || 'eth0'][0].address
     cfgPath: path.join __dirname, '../vm'
     cfgDir: (dir...) ->
       dir.unshift module.exports.vagrant.cfgPath
