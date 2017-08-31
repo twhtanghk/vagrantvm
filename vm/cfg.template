@@ -22,6 +22,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "docker"
 
   config.vm.provider "libvirt" do |v|
+    v.graphics_ip = "<%=ip.vm%>"
     v.driver = "kvm"
     v.nested = true
     v.memory = <%=memory%>
