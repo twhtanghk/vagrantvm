@@ -30,6 +30,7 @@ module.exports =
     portStart:
       ssh: parseInt process.env.SSH
       http: parseInt process.env.HTTP
+      vnc: parseInt process.env.VNC
     cmd:
       backup: _.template "tar -C <%=cwd%> -cJf - ." 
       restore: _.template "tar -C <%=cwd%> -xJf - ."

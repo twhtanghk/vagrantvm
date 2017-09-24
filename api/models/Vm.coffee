@@ -120,6 +120,7 @@ module.exports =
           ret = 
             ssh: last[0].port.ssh + 1
             http: last[0].port.http + 1
+            vnc: last[0].port.http + 1
         cb null, ret
       .catch cb
     
