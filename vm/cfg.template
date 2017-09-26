@@ -1,4 +1,5 @@
 $sshcfg = <<SCRIPT
+#ssh
 file=/etc/ssh/sshd_config
 sed 's/PasswordAuthentication no/PasswordAuthentication yes/g' <$file >/tmp/$$
 mv /tmp/$$ $file
@@ -8,15 +9,16 @@ echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf
 mkdir /vagrant
 echo '<%=ip.nfs%>:/<%=name%>/data /vagrant nfs4 nolock 0 2' >>/etc/fstab
 
+#iptables
 iptables -F
 iptables --policy FORWARD ACCEPT
 iptables -F -t nat
 iptables -t nat -A POSTROUTING -j MASQUERADE
-
+export DEBIAN_FRONTEND=noninteractive
 apt-get install iptables-persistent -y
 SCRIPT
 
-dockercfg = <<SCRIPT
+$dockercfg = <<SCRIPT
 file=/lib/systemd/system/docker.service
 sed '/ExecStart/s/$/ --storage-driver=devicemapper --iptables=false/' <$file >/tmp/$$
 mv /tmp/$$ $file
