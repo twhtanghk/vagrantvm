@@ -12,7 +12,7 @@ RUN echo 'user = "root"' >>/etc/libvirt/qemu.conf \
 &&  echo 'group= "root"' >>/etc/libvirt/qemu.conf
 
 # vagrant
-ENV VAGRANT_VER=1.9.7
+ENV VAGRANT_VER=2.0.0
 ENV VAGRANT_FILE=vagrant_${VAGRANT_VER}_x86_64.deb
 ENV VAGRANT_URL=https://releases.hashicorp.com/vagrant/${VAGRANT_VER}/${VAGRANT_FILE}
 RUN curl -O ${VAGRANT_URL} \
@@ -21,7 +21,7 @@ RUN curl -O ${VAGRANT_URL} \
 &&  vagrant plugin install vagrant-libvirt
 
 # temporary fix for dhcp lease
-COPY vm/dhcp_leases.rb /root/.vagrant.d/gems/2.3.4/gems/fog-libvirt-0.4.0/lib/fog/libvirt/requests/compute
+COPY vm/dhcp_leases.rb /root/.vagrant.d/gems/2.3.4/gems/fog-libvirt-0.4.1/lib/fog/libvirt/requests/compute
 
 # web app
 ENV VER=${VER:-master} \
