@@ -12,6 +12,7 @@ rename = require 'gulp-rename'
 rework = require 'gulp-rework'
 reworkNPM = require 'rework-npm'
 templateCache = require 'gulp-angular-templatecache'
+glob = require 'glob'
 
 _ = require 'lodash'
 fs = require 'fs'
@@ -21,21 +22,23 @@ stream = require 'stream'
 gulp.task 'default', ['coffee', 'css']
 
 gulp.task 'config', ->
+  global.sails = {}
   config = (cfg, file) ->
     _.defaults cfg, require file
-  cfg = glob
+  sails.config = glob
     .sync "./config/env/#{process.env.NODE_ENV}.coffee"
     .concat glob.sync './config/*.coffee'
     .reduce config, {}
+  {oauth2, ssh, vagrant} = sails.config
   fs.writeFileSync 'www/js/config.json', util.inspect
-    AUTHURL: cfg.oauth2.url.authorize
-    VERIFYURL: cfg.oauth2.url.verify
-    SCOPE: cfg.oauth2.scope
-    SSHURL: cfg.ssh.url
-    DISK: cfg.vagrant.disk.min
-    DISKMAX: cfg.vagrant.disk.max
-    MEMORY: cfg.vagrant.memory.min
-    MEMORYMAX: cfg.vagrant.memory.max
+    AUTHURL: oauth2.url.authorize
+    VERIFYURL: oauth2.url.verify
+    SCOPE: oauth2.scope
+    SSHURL: ssh.url
+    DISK: vagrant.disk.min
+    DISKMAX: vagrant.disk.max
+    MEMORY: vagrant.memory.min
+    MEMORYMAX: vagrant.memory.max
 
 gulp.task 'scssAll', ->
   gulp.src 'scss/ionic.app.scss'
@@ -57,7 +60,7 @@ gulp.task 'css', ['cssAll', 'scssAll'], ->
     .pipe rename extname: '.min.css'
     .pipe gulp.dest 'www/css'
 
-gulp.task 'coffee', ['template'],  ->
+gulp.task 'coffee', ['config', 'template'],  ->
   browserify entries: ['www/js/app.coffee']
     .transform 'coffeeify'
     .transform 'debowerify'

@@ -1,4 +1,4 @@
-FROM node:6
+FROM node
 
 # debian package
 ENV DEBIAN_FRONTEND=noninteractive
