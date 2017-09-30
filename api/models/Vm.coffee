@@ -1,13 +1,3 @@
-[
-  'DISK'
-  'DISKMAX'
-  'MEMORY'
-  'MEMORYMAX'
-  'NFSOPTS'
-].map (name) ->
-  if not (name of process.env)
-    throw new Error "process.env.#{name} not yet defined"
-
 _ = require 'lodash'
 path = require 'path'
 Promise = require 'bluebird'
@@ -42,17 +32,17 @@ module.exports =
     disk:
       type: 'integer'
       required: true
-      defaultsTo: process.env.DISK
-      min: process.env.DISK
-      max: process.env.DISKMAX
+      defaultsTo: sails.config.vagrant.disk.min
+      min: sails.config.vagrant.disk.min
+      max: sails.config.vagrant.disk.max
 
     # memory size in MB
     memory:
       type: 'integer'
       required: true
-      defaultsTo: process.env.MEMORY
-      min: process.env.MEMORY
-      max: process.env.MEMORYMAX
+      defaultsTo: sails.config.vagrant.memory.min
+      min: sails.config.vagrant.memory.min
+      max: sails.config.vagrant.memory.max
 
     port:
       type: 'json'
@@ -125,10 +115,6 @@ module.exports =
       .catch cb
     
   beforeValidate: (values, cb) ->
-    if values.disk > process.env.DISKMAX
-      values.disk = process.env.DISKMAX
-    if values.memory > process.env.MEMORYMAX
-      values.memory = process.env.MEMORYMAX
     Vm
       .nextPort (err, port) ->
         if err?
@@ -151,7 +137,7 @@ module.exports =
 
       # update /etc/exports
       sh
-        .echo "#{module.exports.dataDir values} #{_.template(process.env.NFSOPTS)(params)}\n"
+        .echo "#{module.exports.dataDir values} #{_.template(sails.config.vagrant.nfsopts)(params)}\n"
         .toEnd '/etc/exports'
       sh
         .exec 'exportfs -avr'

@@ -1,17 +1,9 @@
 env = require '../../env.coffee'
 req = require 'supertest-as-promised'
-oauth2 = require 'oauth2_client'
 Promise = require 'bluebird'
 
 describe 'controller', ->
   vmlist = ['test1', 'test2']
-  token = null
-
-  before ->
-    oauth2
-      .token env.tokenUrl, env.client, env.user, env.scope
-      .then (t) ->
-        token = t
 
   it 'create vm', ->
     Promise.all vmlist.map (name) ->

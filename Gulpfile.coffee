@@ -18,30 +18,24 @@ fs = require 'fs'
 util = require 'util'
 stream = require 'stream'
 
-config = (params) ->
-  attrs = [
-    'AUTHURL'
-    'VERIFYURL'
-    'SCOPE'
-    'SSHURL'
-    'DISK'
-    'DISKMAX'
-    'MEMORY'
-    'MEMORYMAX'
-  ]
-  _.defaults params,
-    _.pick process.env, attrs
-  fs.writeFileSync 'www/js/config.json', util.inspect(params)
-
-class StringStream extends stream.Readable
-  constructor: (@str) ->
-    super()
-
-  _read: (size) ->
-    @push @str
-    @push null
-    
 gulp.task 'default', ['coffee', 'css']
+
+gulp.task 'config', ->
+  config = (cfg, file) ->
+    _.defaults cfg, require file
+  cfg = glob
+    .sync "./config/env/#{process.env.NODE_ENV}.coffee"
+    .concat glob.sync './config/*.coffee'
+    .reduce config, {}
+  fs.writeFileSync 'www/js/config.json', util.inspect
+    AUTHURL: cfg.oauth2.url.authorize
+    VERIFYURL: cfg.oauth2.url.verify
+    SCOPE: cfg.oauth2.scope
+    SSHURL: cfg.ssh.url
+    DISK: cfg.vagrant.disk.min
+    DISKMAX: cfg.vagrant.disk.max
+    MEMORY: cfg.vagrant.memory.min
+    MEMORYMAX: cfg.vagrant.memory.max
 
 gulp.task 'scssAll', ->
   gulp.src 'scss/ionic.app.scss'
@@ -64,7 +58,6 @@ gulp.task 'css', ['cssAll', 'scssAll'], ->
     .pipe gulp.dest 'www/css'
 
 gulp.task 'coffee', ['template'],  ->
-  config CLIENT_ID: process.env.WEB_CLIENT_ID
   browserify entries: ['www/js/app.coffee']
     .transform 'coffeeify'
     .transform 'debowerify'
@@ -74,7 +67,6 @@ gulp.task 'coffee', ['template'],  ->
     .pipe streamify uglify()
     .pipe rename extname: '.min.js'
     .pipe gulp.dest 'www/js'
-  
   
 gulp.task 'template', ->
   Form = require 'sails.form'

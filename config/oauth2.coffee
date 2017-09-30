@@ -1,8 +1,15 @@
-[ 'VERIFYURL', 'SCOPE' ].map (name) ->
-  if not (name of process.env)
-    throw new Error "process.env.#{name} not yet defined"
-
 module.exports =
   oauth2:
-    verifyUrl: process.env.VERIFYURL
-    scope: process.env.SCOPE?.split(' ')
+    url:
+      authorize: 'https://abc.com/auth/oauth2/authorize/'
+      verify: 'https://abc.com/auth/oauth2/verify/'
+      token: 'https://abc.com/auth/oauth2/token/'
+    client:
+      id: 'client_id'
+      secret: 'client_secret'
+    user:
+      id: 'user_id'
+      secret: 'user_secret'
+    scope: [
+      'User'
+    ]
