@@ -105,12 +105,12 @@ module.exports =
       .sort 'createdAt DESC'
       .limit 1
       .then (last) ->
-        ret = sails.config.vagrant.portStart
+        ret = sails.config.vagrant.port
         if last.length == 1
           ret = 
             ssh: last[0].port.ssh + 1
             http: last[0].port.http + 1
-            vnc: last[0].port.http + 1
+            vnc: last[0].port.vnc + 1
         cb null, ret
       .catch cb
     
