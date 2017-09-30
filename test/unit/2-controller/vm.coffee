@@ -1,4 +1,3 @@
-env = require '../../env.coffee'
 req = require 'supertest-as-promised'
 Promise = require 'bluebird'
 
@@ -35,8 +34,7 @@ describe 'controller', ->
               .set 'Authorization', "Bearer #{token}"
               .expect 200
           .then ->
-            new Promise (resolve, reject) ->
-              setTimeout resolve, env.upTime
+            Promise.delay uptime
        
   it 'restart vm', ->
     Promise

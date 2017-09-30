@@ -1,4 +1,3 @@
-env = require '../../env.coffee'
 Promise = require 'bluebird'
 
 describe 'model', ->
@@ -34,8 +33,7 @@ describe 'model', ->
           .then (vm) ->
             vm?.up()
       .then ->
-        new Promise (resolve, reject) ->
-          setTimeout resolve, env.upTime
+        Promise.delay uptime
 
   it 'restart vm', ->
     Promise.mapSeries vmlist, (name) ->
