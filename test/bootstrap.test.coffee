@@ -13,7 +13,7 @@ before ->
         .token url.token, client, user, scope
     .then (token) ->
       global.token = token
-      global.uptime = 120000
-		
+      global.uptime = 150000
+
 after ->
   Sails.lowerAsync()
