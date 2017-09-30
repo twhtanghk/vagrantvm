@@ -33,6 +33,7 @@ gulp.task 'config', ->
   fs.writeFileSync 'www/js/config.json', util.inspect
     AUTHURL: oauth2.url.authorize
     VERIFYURL: oauth2.url.verify
+    CLIENT_ID: oauth2.client.id
     SCOPE: oauth2.scope
     SSHURL: ssh.url
     DISK: vagrant.disk.min
