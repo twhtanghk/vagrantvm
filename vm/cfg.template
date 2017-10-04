@@ -7,7 +7,7 @@ echo vagrant:vagrant |chpasswd
 service ssh restart
 echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf
 mkdir /vagrant
-echo '<%=ip.nfs%>:/<%=name%>/data /vagrant nfs4 nolock 0 2' >>/etc/fstab
+echo '<%=ip.nfs()%>:/<%=name%>/data /vagrant nfs4 nolock 0 2' >>/etc/fstab
 
 #iptables
 iptables -F
