@@ -18,8 +18,7 @@ module.exports =
     template: ->
       _.template fs.readFileSync path.join(module.exports.vagrant.cfgPath, 'cfg.template')
     ip:
-      nfs: ->
-        ip.or ip.cidr(module.exports.vagrant.net), '0.0.0.1'
+      nfs: '192.168.1.1'
       vm: os.networkInterfaces()['eth0'][0].address
     cfgPath: path.join __dirname, '../vm'
     cfgDir: (dir...) ->
