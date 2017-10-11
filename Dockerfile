@@ -24,11 +24,8 @@ RUN curl -O ${VAGRANT_URL} \
 COPY vm/dhcp_leases.rb /root/.vagrant.d/gems/2.3.4/gems/fog-libvirt-0.4.1/lib/fog/libvirt/requests/compute
 
 # web app
-ENV VER=${VER:-master} \
-    REPO=https://github.com/twhtanghk/vagrantvm \
-    APP=/usr/src/app
-
-RUN git clone -b $VER $REPO $APP
+ENV APP=/usr/src/app
+ADD . $APP
 
 WORKDIR $APP
 
