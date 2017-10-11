@@ -93,12 +93,6 @@ module.exports =
     destroy: ->
       @cmd 'destroy'
             
-    backup: ->
-      sh.execAsync sails.config.vagrant.cmd.backup(cwd: module.exports.dataDir @), { async: true, encoding: 'buffer' }
-
-    restore: ->
-      sh.execAsync sails.config.vagrant.cmd.restore(cwd: module.exports.dataDir @), { async: true, encoding: 'buffer' }
-
   nextPort: (cb) ->
     Vm
       .find()
@@ -135,13 +129,6 @@ module.exports =
         .echo sails.config.vagrant.template()(params)
         .to module.exports.cfgFile values
 
-      # update /etc/exports
-      sh
-        .echo "#{module.exports.dataDir values} #{_.template(sails.config.vagrant.nfsopts)(params)}\n"
-        .toEnd '/etc/exports'
-      sh
-        .exec 'exportfs -avr'
-
       cb()
     catch e
       cb e
@@ -160,15 +147,6 @@ module.exports =
                 # delete vm home folder
                 sh
                   .rm '-rf', module.exports.cfgDir vm
-
-                # delete nfs exports entry for vm
-                sh
-                  .grep '-v', module.exports.dataDir(vm), '/etc/exports'
-                  .to "/tmp/#{vm.name}.tmp"
-                sh
-                  .mv "/tmp/#{vm.name}.tmp", '/etc/exports'
-                sh
-                  .exec 'exportfs -avr'
               catch e
                 Promise.reject e
       .then ->
