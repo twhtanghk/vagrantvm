@@ -35,7 +35,6 @@ gulp.task 'config', ->
     VERIFYURL: oauth2.url.verify
     CLIENT_ID: oauth2.client.id
     SCOPE: oauth2.scope
-    SSHURL: ssh.url
     DISK: vagrant.disk.min
     DISKMAX: vagrant.disk.max
     MEMORY: vagrant.memory.min
