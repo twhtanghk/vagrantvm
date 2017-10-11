@@ -14,11 +14,9 @@ module.exports =
       min: 2
       max: 4
     net: '192.168.121.0/24'
-    nfsopts: '*(rw,no_subtree_check,no_root_squash,fsid=<%=port.ssh%>)'
     template: ->
       _.template fs.readFileSync path.join(module.exports.vagrant.cfgPath, 'cfg.template')
     ip:
-      nfs: '192.168.1.1'
       vm: os.networkInterfaces()['eth0'][0].address
     cfgPath: path.join __dirname, '../vm'
     cfgDir: (dir...) ->
