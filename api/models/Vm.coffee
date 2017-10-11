@@ -36,7 +36,7 @@ module.exports =
       min: sails.config.vagrant.disk.min
       max: sails.config.vagrant.disk.max
 
-    # memory size in MB
+    # memory size in GB
     memory:
       type: 'integer'
       required: true
