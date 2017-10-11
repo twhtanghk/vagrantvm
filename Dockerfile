@@ -3,7 +3,7 @@ FROM node
 # debian package
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
-&&  apt-get install -y qemu-kvm libvirt-bin ebtables dnsmasq libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev rsync nfs-kernel-server \
+&&  apt-get install -y qemu-kvm libvirt-bin ebtables dnsmasq libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev rsync \
 &&  apt-get clean \
 &&  rm -rf /var/lib/apt/lists/*
 
