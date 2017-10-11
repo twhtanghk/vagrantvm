@@ -24,7 +24,6 @@ module.exports =
       path.join dir...
     box: 'debian/jessie64'
     port:
-      ssh: 2200
       http: 8000
       vnc: 5900
     cmd:

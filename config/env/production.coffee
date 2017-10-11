@@ -23,6 +23,5 @@ module.exports =
       max: 4
     port:
       vnc: 5900
-      ssh: 2200
       http: 8000
     box: 'debian/jessie64'
