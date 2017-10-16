@@ -8,7 +8,7 @@ describe 'controller', ->
     Promise.all vmlist.map (name) ->
       req sails.hooks.http.app
         .post '/api/vm'
-        .set 'Authorization', "Bearer #{token}"
+        .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
         .send name: name
         .expect 201
 
@@ -20,7 +20,7 @@ describe 'controller', ->
           .then (vm) ->
             req sails.hooks.http.app
               .get "/api/vm/#{vm.id}"
-              .set 'Authorization', "Bearer #{token}"
+              .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
               .expect 200
 
   it 'up vm', ->
@@ -31,7 +31,7 @@ describe 'controller', ->
           .then (vm) ->
             req sails.hooks.http.app
               .put "/api/vm/#{vm.id}/up"
-              .set 'Authorization', "Bearer #{token}"
+              .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
               .expect 200
           .then ->
             Promise.delay uptime
@@ -44,7 +44,7 @@ describe 'controller', ->
           .then (vm) ->
             req sails.hooks.http.app
               .put "/api/vm/#{vm.id}/restart"
-              .set 'Authorization', "Bearer #{token}"
+              .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
               .expect 200
 
   it 'delete vm', ->
@@ -55,5 +55,5 @@ describe 'controller', ->
           .then (vm) ->
             req sails.hooks.http.app
               .del "/api/vm/#{vm.id}"
-              .set 'Authorization', "Bearer #{token}"
+              .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
               .expect 200
