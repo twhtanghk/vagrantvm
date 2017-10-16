@@ -93,7 +93,7 @@ module.exports =
     destroy: ->
       @cmd 'destroy'
             
-  nextPort: (cb) ->
+  nextPort: ->
     Vm
       .find()
       .sort 'createdAt DESC'
@@ -104,16 +104,15 @@ module.exports =
           ret = 
             http: last[0].port.http + 1
             vnc: last[0].port.vnc + 1
-        cb null, ret
-      .catch cb
-    
+        ret
+
   beforeValidate: (values, cb) ->
     Vm
-      .nextPort (err, port) ->
-        if err?
-          return cb err
+      .nextPort()
+      .then (port) ->
         values.port = port
         cb()
+      .catch cb
       
   beforeCreate: (values, cb) ->
     params = _.extend sails.config.vagrant, values
