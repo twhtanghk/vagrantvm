@@ -1,5 +1,7 @@
 _ = require 'lodash'
 actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
+PQueue = require 'p-queue'
+queue = new PQueue concurrency: 1
 Promise = require 'bluebird'
 notFound = new Error 'not found'
 reject = (err, res) ->
@@ -8,6 +10,19 @@ reject = (err, res) ->
   res.serverError err
 
 module.exports =
+  create: (req, res) ->
+    Model = actionUtil.parseModel req
+    data = actionUtil.parseValues req
+    # ensure only 1 request entering the critical section to create vm
+    queue
+      .add ->
+        Model
+          .create data
+          .toPromise()
+      .then (record) ->
+        res.created record
+      .catch res.negotiate
+
   findOne: (req, res) ->
     pk = actionUtil.requirePk req
     sails.models.vm
