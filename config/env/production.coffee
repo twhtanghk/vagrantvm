@@ -1,5 +1,8 @@
 module.exports =
   keepResponseErrors: true
+  admin: [
+    'admin@abc.com'
+  ]
   oauth2:
     url:
       authorize: 'https://abc.com/auth/oauth2/authorize/'
