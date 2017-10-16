@@ -12,6 +12,12 @@ describe 'controller', ->
         .send name: name
         .expect 201
 
+  it 'list all vm by admin', ->
+    req sails.hooks.http.app
+      .get '/api/vm/listAll'
+      .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
+      .expect 200
+
   it 'status vm', ->
     Promise
       .all vmlist.map (name) ->
