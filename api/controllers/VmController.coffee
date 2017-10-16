@@ -63,6 +63,9 @@ module.exports =
           results: results
       .catch res.serverError
 
+  listAll: (req, res) ->
+    @find req, res
+
   cmd: (req, res) ->
     pk = actionUtil.requirePk req
     sails.models.vm
