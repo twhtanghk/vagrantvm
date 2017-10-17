@@ -1,4 +1,5 @@
 req = require 'supertest-as-promised'
+co = require 'co'
 Promise = require 'bluebird'
 
 describe 'controller', ->
@@ -12,11 +13,16 @@ describe 'controller', ->
         .send name: name
         .expect 201
 
-  it 'list all vm by admin', ->
+  it 'list all vm', ->
     req sails.hooks.http.app
-      .get '/api/vm/listAll'
+      .get '/api/vm'
       .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
       .expect 200
+
+  it 'full list all vm by armodel', -> co ->
+    gen = yield sails.config.vm.model().fetchFull()
+    for i from gen()
+      console.log i
 
   it 'status vm', ->
     Promise
