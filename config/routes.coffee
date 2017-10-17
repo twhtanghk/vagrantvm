@@ -11,7 +11,7 @@ module.exports =
       action: 'findOne'
 
     # vm routes
-    'GET /api/vm/listAll':
+    'GET /api/vm/full':
       controller: 'VmController'
       action: 'listAll'
       sort:
