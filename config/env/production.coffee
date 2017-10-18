@@ -30,3 +30,10 @@ module.exports =
     box: 'debian/jessie64'
   vm:
     url: 'https://abc.com/vm/api/vm'
+  webhook:
+    url: 'http://vncproxy.service.triangle:1337/reload'
+    oauth2: 
+      grant_type: 'client_credentials'
+      client:
+        id: 'client_credentials'
+        secret: 'client_secret'
