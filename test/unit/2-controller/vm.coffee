@@ -1,25 +1,28 @@
-env = require '../../env.coffee'
 req = require 'supertest-as-promised'
-oauth2 = require 'oauth2_client'
+co = require 'co'
 Promise = require 'bluebird'
 
 describe 'controller', ->
   vmlist = ['test1', 'test2']
-  token = null
-
-  before ->
-    oauth2
-      .token env.tokenUrl, env.client, env.user, env.scope
-      .then (t) ->
-        token = t
 
   it 'create vm', ->
     Promise.all vmlist.map (name) ->
       req sails.hooks.http.app
         .post '/api/vm'
-        .set 'Authorization', "Bearer #{token}"
+        .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
         .send name: name
         .expect 201
+
+  it 'list all vm', ->
+    req sails.hooks.http.app
+      .get '/api/vm'
+      .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
+      .expect 200
+
+  it 'full list all vm by armodel', -> co ->
+    gen = yield sails.config.vm.model().fetchFull()
+    for i from gen()
+      console.log i
 
   it 'status vm', ->
     Promise
@@ -29,7 +32,7 @@ describe 'controller', ->
           .then (vm) ->
             req sails.hooks.http.app
               .get "/api/vm/#{vm.id}"
-              .set 'Authorization', "Bearer #{token}"
+              .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
               .expect 200
 
   it 'up vm', ->
@@ -40,11 +43,10 @@ describe 'controller', ->
           .then (vm) ->
             req sails.hooks.http.app
               .put "/api/vm/#{vm.id}/up"
-              .set 'Authorization', "Bearer #{token}"
+              .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
               .expect 200
           .then ->
-            new Promise (resolve, reject) ->
-              setTimeout resolve, env.upTime
+            Promise.delay uptime
        
   it 'restart vm', ->
     Promise
@@ -54,7 +56,7 @@ describe 'controller', ->
           .then (vm) ->
             req sails.hooks.http.app
               .put "/api/vm/#{vm.id}/restart"
-              .set 'Authorization', "Bearer #{token}"
+              .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
               .expect 200
 
   it 'delete vm', ->
@@ -65,5 +67,5 @@ describe 'controller', ->
           .then (vm) ->
             req sails.hooks.http.app
               .del "/api/vm/#{vm.id}"
-              .set 'Authorization', "Bearer #{token}"
+              .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
               .expect 200

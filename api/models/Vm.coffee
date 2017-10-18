@@ -1,13 +1,3 @@
-[
-  'DISK'
-  'DISKMAX'
-  'MEMORY'
-  'MEMORYMAX'
-  'NFSOPTS'
-].map (name) ->
-  if not (name of process.env)
-    throw new Error "process.env.#{name} not yet defined"
-
 _ = require 'lodash'
 path = require 'path'
 Promise = require 'bluebird'
@@ -42,17 +32,17 @@ module.exports =
     disk:
       type: 'integer'
       required: true
-      defaultsTo: process.env.DISK
-      min: process.env.DISK
-      max: process.env.DISKMAX
+      defaultsTo: sails.config.vagrant.disk.min
+      min: sails.config.vagrant.disk.min
+      max: sails.config.vagrant.disk.max
 
-    # memory size in MB
+    # memory size in GB
     memory:
       type: 'integer'
       required: true
-      defaultsTo: process.env.MEMORY
-      min: process.env.MEMORY
-      max: process.env.MEMORYMAX
+      defaultsTo: sails.config.vagrant.memory.min
+      min: sails.config.vagrant.memory.min
+      max: sails.config.vagrant.memory.max
 
     port:
       type: 'json'
@@ -103,38 +93,26 @@ module.exports =
     destroy: ->
       @cmd 'destroy'
             
-    backup: ->
-      sh.execAsync sails.config.vagrant.cmd.backup(cwd: module.exports.dataDir @), { async: true, encoding: 'buffer' }
-
-    restore: ->
-      sh.execAsync sails.config.vagrant.cmd.restore(cwd: module.exports.dataDir @), { async: true, encoding: 'buffer' }
-
-  nextPort: (cb) ->
+  nextPort: ->
     Vm
       .find()
       .sort 'createdAt DESC'
       .limit 1
       .then (last) ->
-        ret = sails.config.vagrant.portStart
+        ret = sails.config.vagrant.port
         if last.length == 1
           ret = 
-            ssh: last[0].port.ssh + 1
             http: last[0].port.http + 1
-            vnc: last[0].port.http + 1
-        cb null, ret
-      .catch cb
-    
+            vnc: last[0].port.vnc + 1
+        ret
+
   beforeValidate: (values, cb) ->
-    if values.disk > process.env.DISKMAX
-      values.disk = process.env.DISKMAX
-    if values.memory > process.env.MEMORYMAX
-      values.memory = process.env.MEMORYMAX
     Vm
-      .nextPort (err, port) ->
-        if err?
-          return cb err
+      .nextPort()
+      .then (port) ->
         values.port = port
         cb()
+      .catch cb
       
   beforeCreate: (values, cb) ->
     params = _.extend sails.config.vagrant, values
@@ -149,16 +127,13 @@ module.exports =
         .echo sails.config.vagrant.template()(params)
         .to module.exports.cfgFile values
 
-      # update /etc/exports
-      sh
-        .echo "#{module.exports.dataDir values} #{_.template(process.env.NFSOPTS)(params)}\n"
-        .toEnd '/etc/exports'
-      sh
-        .exec 'exportfs -avr'
-
       cb()
     catch e
       cb e
+
+  afterCreate: (record, cb) ->
+    sails.config.webhook.reload().catch sails.log.error
+    cb()
 
   beforeDestroy: (criteria, cb) ->
     sails.models.vm
@@ -174,20 +149,14 @@ module.exports =
                 # delete vm home folder
                 sh
                   .rm '-rf', module.exports.cfgDir vm
-
-                # delete nfs exports entry for vm
-                sh
-                  .grep '-v', module.exports.dataDir(vm), '/etc/exports'
-                  .to "/tmp/#{vm.name}.tmp"
-                sh
-                  .mv "/tmp/#{vm.name}.tmp", '/etc/exports'
-                sh
-                  .exec 'exportfs -avr'
               catch e
                 Promise.reject e
       .then ->
         cb()
       .catch cb
+
+  afterDestroy: (records, cb) ->
+    @afterCreate null, cb
 
   cfgFile: (vm) ->
     path.join module.exports.cfgDir(vm), 'Vagrantfile'

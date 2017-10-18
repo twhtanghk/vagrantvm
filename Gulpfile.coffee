@@ -12,36 +12,33 @@ rename = require 'gulp-rename'
 rework = require 'gulp-rework'
 reworkNPM = require 'rework-npm'
 templateCache = require 'gulp-angular-templatecache'
+glob = require 'glob'
 
 _ = require 'lodash'
 fs = require 'fs'
 util = require 'util'
 stream = require 'stream'
 
-config = (params) ->
-  attrs = [
-    'AUTHURL'
-    'VERIFYURL'
-    'SCOPE'
-    'SSHURL'
-    'DISK'
-    'DISKMAX'
-    'MEMORY'
-    'MEMORYMAX'
-  ]
-  _.defaults params,
-    _.pick process.env, attrs
-  fs.writeFileSync 'www/js/config.json', util.inspect(params)
-
-class StringStream extends stream.Readable
-  constructor: (@str) ->
-    super()
-
-  _read: (size) ->
-    @push @str
-    @push null
-    
 gulp.task 'default', ['coffee', 'css']
+
+gulp.task 'config', ->
+  global.sails = {}
+  config = (cfg, file) ->
+    _.defaults cfg, require file
+  sails.config = glob
+    .sync "./config/env/#{process.env.NODE_ENV}.coffee"
+    .concat glob.sync './config/*.coffee'
+    .reduce config, {}
+  {oauth2, ssh, vagrant} = sails.config
+  fs.writeFileSync 'www/js/config.json', util.inspect
+    AUTHURL: oauth2.url.authorize
+    VERIFYURL: oauth2.url.verify
+    CLIENT_ID: oauth2.client.id
+    SCOPE: oauth2.scope
+    DISK: vagrant.disk.min
+    DISKMAX: vagrant.disk.max
+    MEMORY: vagrant.memory.min
+    MEMORYMAX: vagrant.memory.max
 
 gulp.task 'scssAll', ->
   gulp.src 'scss/ionic.app.scss'
@@ -63,8 +60,7 @@ gulp.task 'css', ['cssAll', 'scssAll'], ->
     .pipe rename extname: '.min.css'
     .pipe gulp.dest 'www/css'
 
-gulp.task 'coffee', ['template'],  ->
-  config CLIENT_ID: process.env.WEB_CLIENT_ID
+gulp.task 'coffee', ['config', 'template'],  ->
   browserify entries: ['www/js/app.coffee']
     .transform 'coffeeify'
     .transform 'debowerify'
@@ -74,7 +70,6 @@ gulp.task 'coffee', ['template'],  ->
     .pipe streamify uglify()
     .pipe rename extname: '.min.js'
     .pipe gulp.dest 'www/js'
-  
   
 gulp.task 'template', ->
   Form = require 'sails.form'

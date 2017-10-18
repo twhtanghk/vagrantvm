@@ -24,8 +24,8 @@ angular
       
       cmd: (op, files) ->
         switch op
-          when 'ssh'
-            window.open "#{env.SSHURL}?port=#{@port.ssh}"
+          when 'console'
+            window.open "../console/#{@name}/"
           when 'backup'
             $http
               .get "#{@$url()}/#{op}", responseType: 'blob'

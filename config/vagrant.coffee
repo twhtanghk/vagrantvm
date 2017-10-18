@@ -5,32 +5,27 @@ path = require 'path'
 _ = require 'lodash'
 url = require 'url'
 
-[
-  'BOX'
-  'SSH'
-  'HTTP'
-  'NET'
-].map (name) ->
-  if not (name of process.env)
-    throw new Error "process.env.#{name} not yet defined"
-
 module.exports =
   vagrant:
+    disk: # GB
+      min: 20
+      max: 80
+    memory: # GB
+      min: 2
+      max: 4
+    net: '192.168.121.0/24'
     template: ->
       _.template fs.readFileSync path.join(module.exports.vagrant.cfgPath, 'cfg.template')
-    net: process.env.NET
     ip:
-      nfs: ip.or ip.cidr(process.env.NET), '0.0.0.1'
-      vm: os.networkInterfaces()[process.env.INTERFACE || 'eth0'][0].address
+      vm: os.networkInterfaces()['eth0'][0].address
     cfgPath: path.join __dirname, '../vm'
     cfgDir: (dir...) ->
       dir.unshift module.exports.vagrant.cfgPath
       path.join dir...
-    box: process.env.BOX
-    portStart:
-      ssh: parseInt process.env.SSH
-      http: parseInt process.env.HTTP
-      vnc: parseInt process.env.VNC
+    box: 'debian/jessie64'
+    port:
+      http: 8000
+      vnc: 5900
     cmd:
       backup: _.template "tar -C <%=cwd%> -cJf - ." 
       restore: _.template "tar -C <%=cwd%> -xJf - ."

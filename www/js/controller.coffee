@@ -23,7 +23,7 @@ angular
       showAction: ->
         $ionicActionSheet.show
           buttons: [
-            { text: 'ssh', cmd: 'ssh' }
+            { text: 'console', cmd: 'console' }
             { text: 'up', cmd: 'up' }
             { text: 'down', cmd: 'down' }
             { text: 'resume', cmd: 'resume' }

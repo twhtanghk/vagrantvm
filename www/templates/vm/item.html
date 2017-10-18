@@ -8,13 +8,3 @@
   on-tap="collection.remove(model)">
   {{'delete' | translate}}
 </ion-option-button>
-<ion-option-button 
-  class="button-positive"
-  ngf-select="model.cmd('restore', $files)">
-  {{'Restore' | translate}}
-</ion-option-button>
-<ion-option-button 
-  class="button-stable"
-  on-tap="model.cmd('backup')">
-  {{'Backup' | translate}}
-</ion-option-button>

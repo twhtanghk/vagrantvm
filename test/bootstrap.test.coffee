@@ -1,16 +1,17 @@
-env = require './env.coffee'
+Promise = require 'bluebird'
+Sails = Promise.promisifyAll require 'sails'
 fs = require 'fs'
+co = require 'co'
 config = JSON.parse fs.readFileSync './.sailsrc'
 
-Sails = require 'sails'
+before ->
+  Sails
+    .liftAsync config
+    .then -> co ->
+      sails.config.oauth2
+        .validToken sails.config.oauth2
+    .then (token) ->
+      global.uptime = 150000
 
-before (done) ->
-  @timeout env.timeout
-
-  Sails.lift config, (err, sails) ->
-    if err
-      return done err
-    done err, sails
-		
-after (done) ->
-  Sails.lower done	
+after ->
+  Sails.lowerAsync()

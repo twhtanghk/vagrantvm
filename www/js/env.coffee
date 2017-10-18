@@ -12,7 +12,7 @@ module.exports =
 
 	oauth2:
 		opts:
-			authUrl: 		"#{config.AUTHURL}/oauth2/authorize/"
+			authUrl: 		config.AUTHURL
 			response_type:	"token"
 			scope:			config.SCOPE
 			client_id:		config.CLIENT_ID	
