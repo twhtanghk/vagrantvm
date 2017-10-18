@@ -131,6 +131,10 @@ module.exports =
     catch e
       cb e
 
+  afterCreate: (record, cb) ->
+    sails.config.webhook.reload().catch sails.log.error
+    cb()
+
   beforeDestroy: (criteria, cb) ->
     sails.models.vm
       .find criteria
@@ -150,6 +154,9 @@ module.exports =
       .then ->
         cb()
       .catch cb
+
+  afterDestroy: (records, cb) ->
+    @afterCreate null, cb
 
   cfgFile: (vm) ->
     path.join module.exports.cfgDir(vm), 'Vagrantfile'
