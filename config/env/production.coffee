@@ -28,6 +28,7 @@ module.exports =
       vnc: 5900
       http: 8000
     box: 'debian/jessie64'
+    passwd: 'default_vnc_passwd'
   vm:
     url: 'https://abc.com/vm/api/vm'
   webhook:

@@ -26,6 +26,4 @@ module.exports =
     port:
       http: 8000
       vnc: 5900
-    cmd:
-      backup: _.template "tar -C <%=cwd%> -cJf - ." 
-      restore: _.template "tar -C <%=cwd%> -xJf - ."
+    passwd: 'default_vnc_passwd'
