@@ -2,6 +2,7 @@ module.exports =
   policies:
     VmController:
       '*': false
+      passwd: ['isAuth', 'isOwner']
       findOne: ['isAuth', 'isOwner']
       find: ['isAuth', 'filterByOwner']
       listAll: ['isAuth', 'isAdmin']

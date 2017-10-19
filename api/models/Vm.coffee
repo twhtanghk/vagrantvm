@@ -90,6 +90,12 @@ module.exports =
     resume: ->
       @cmd 'resume'
 
+    passwd: (passwd) ->
+      params = _.defaults passwd: passwd, @
+      sh
+        .echo sails.config.vagrant.template()(params)
+        .to module.exports.cfgFile values
+
     destroy: ->
       @cmd 'destroy'
             

@@ -11,6 +11,9 @@ module.exports =
       action: 'findOne'
 
     # vm routes
+    'PUT /api/vm/:id'
+      controller: 'VmController'
+      action: 'passwd'
     'GET /api/vm/full':
       controller: 'VmController'
       action: 'listAll'

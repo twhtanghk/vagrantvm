@@ -10,6 +10,19 @@ reject = (err, res) ->
   res.serverError err
 
 module.exports =
+  passwd: (req, res) ->
+    Model = actionUtil.parseModel req
+    pk = actionUtil.requirePk req
+    {passwd} = actionUtil.parseValues req
+    Model
+      .findOne pk
+      .then (vm) ->
+        if not vm?
+          return res.notFound()
+        vm.passwd passwd
+        res.ok vm
+      .catch res.negotiate
+
   create: (req, res) ->
     Model = actionUtil.parseModel req
     data = actionUtil.parseValues req

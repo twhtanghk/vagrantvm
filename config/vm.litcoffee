@@ -14,4 +14,7 @@ model to acccess http reverse proxy api
             .statics
               fetchFull: (opts) ->
                 @fetchAll _.defaults url: "#{@baseUrl}/full", opts
+            .mehtods
+              passwd: (passwd) ->
+                @save passwd: passwd
             .use sails.config.api().use sails.config.oauth2.getOpts
