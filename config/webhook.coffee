@@ -13,4 +13,4 @@ module.exports =
               Authorization: "Bearer #{yield sails.config.oauth2.validToken sails.config.webhook.oauth2}"
           _.extend ret, opts
       res = yield api.get sails.config.webhook.url
-      sails.log.debug "webhook reload #{res.body.toString()}"
+      sails.log.info "webhook reload #{res.body.toString()}"
