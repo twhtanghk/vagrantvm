@@ -4,14 +4,29 @@ Promise = require 'bluebird'
 
 describe 'controller', ->
   vmlist = ['test1', 'test2']
+  vmCreated = null
 
   it 'create vm', ->
-    Promise.all vmlist.map (name) ->
-      req sails.hooks.http.app
-        .post '/api/vm'
-        .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
-        .send name: name
-        .expect 201
+    Promise
+      .all vmlist.map (name) ->
+        req sails.hooks.http.app
+          .post '/api/vm'
+          .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
+          .send name: name
+          .expect 201
+          .then (res) ->
+            res.body
+      .then (res) ->
+        vmCreated = res
+
+  it 'passwd vm', ->
+    Promise
+      .all vmCreated.map (vm) ->
+        req sails.hooks.http.app
+          .put "/api/vm/#{vm.id}/passwd"
+          .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
+          .send passwd: 'passwd'
+          .expect 200
 
   it 'list all vm', ->
     req sails.hooks.http.app
