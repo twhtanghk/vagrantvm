@@ -91,10 +91,10 @@ module.exports =
       @cmd 'resume'
 
     passwd: (passwd) ->
-      params = _.defaults passwd: passwd, @
+      params = _.defaults passwd: passwd, sails.config.vagrant, @
       sh
         .echo sails.config.vagrant.template()(params)
-        .to module.exports.cfgFile values
+        .to module.exports.cfgFile @
 
     destroy: ->
       @cmd 'destroy'
