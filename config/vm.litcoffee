@@ -13,7 +13,7 @@ model to acccess http reverse proxy api
             .armodel sails.config.vm.url
             .statics
               fetchFull: (opts) ->
-                @fetchAll _.defaults url: "#{@baseUrl}/full", opts
+                yield @fetchAll _.defaults url: "#{@baseUrl}/full", opts
             .methods
               passwd: (passwd) ->
                 @save passwd: passwd
