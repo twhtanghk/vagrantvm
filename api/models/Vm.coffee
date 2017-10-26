@@ -1,4 +1,5 @@
 _ = require 'lodash'
+_.defaults = require 'merge-defaults'
 path = require 'path'
 Promise = require 'bluebird'
 sh = require 'shelljs'
@@ -91,7 +92,7 @@ module.exports =
       @cmd 'resume'
 
     passwd: (passwd) ->
-      params = _.defaults passwd: passwd, sails.config.vagrant, @
+      params = _.defaults passwd: passwd, @, sails.config.vagrant
       sh
         .echo sails.config.vagrant.template()(params)
         .to module.exports.cfgFile @
@@ -121,7 +122,8 @@ module.exports =
       .catch cb
       
   beforeCreate: (values, cb) ->
-    params = _.extend sails.config.vagrant, values
+    params = _.defaults {}, values, sails.config.vagrant
+    sails.log.error params
 
     try
       # create vm home folder
