@@ -15,6 +15,28 @@ sh.execAsync = (cmd, opts = {}) ->
         return reject err
       resolve out
     
+cfg =
+  file: (vm) ->
+    path.join cfg.dir(vm), 'Vagrantfile'
+
+  dir: (vm) ->
+    path.join sails.config.vagrant.cfgDir 'data', vm.name
+    
+  create: (vm) ->
+    # create vm home folder
+    sh
+      .mkdir '-p', cfg.dir vm
+
+    # create Vagrantfile
+    params = _.defaults {}, vm, sails.config.vagrant
+    sh
+      .echo sails.config.vagrant.template()(params)
+      .to cfg.file vm
+    
+  destroy: (vm) ->
+    sh
+      .rm '-rf', cfg.dir vm
+
 module.exports =
 
   tableName: 'vm'
@@ -54,7 +76,7 @@ module.exports =
       required:  true
 
     cmd: (op, opts = {}) ->
-      cmd = "env VAGRANT_CWD=#{module.exports.cfgDir @} vagrant #{op}"
+      cmd = "env VAGRANT_CWD=#{cfg.dir @} vagrant #{op}"
       if op == 'status'
         sh.execAsync cmd
       else 
@@ -92,10 +114,10 @@ module.exports =
       @cmd 'resume'
 
     passwd: (passwd) ->
-      params = _.defaults passwd: passwd, @, sails.config.vagrant
-      sh
-        .echo sails.config.vagrant.template()(params)
-        .to module.exports.cfgFile @
+      try
+        cfg.create _.defaults passwd: passwd, @
+      catch err
+        sails.log.error err
 
     destroy: ->
       @cmd 'destroy'
@@ -122,19 +144,8 @@ module.exports =
       .catch cb
       
   beforeCreate: (values, cb) ->
-    params = _.defaults {}, values, sails.config.vagrant
-    sails.log.error params
-
     try
-      # create vm home folder
-      sh
-        .mkdir '-p', module.exports.dataDir values
-
-      # create Vagrantfile
-      sh
-        .echo sails.config.vagrant.template()(params)
-        .to module.exports.cfgFile values
-
+      cfg.create values
       cb()
     catch e
       cb e
@@ -154,9 +165,7 @@ module.exports =
               vm.destroy()
             .then ->
               try
-                # delete vm home folder
-                sh
-                  .rm '-rf', module.exports.cfgDir vm
+                cfg.destroy vm
               catch e
                 Promise.reject e
       .then ->
@@ -165,12 +174,3 @@ module.exports =
 
   afterDestroy: (records, cb) ->
     @afterCreate null, cb
-
-  cfgFile: (vm) ->
-    path.join module.exports.cfgDir(vm), 'Vagrantfile'
-
-  cfgDir: (vm) ->
-    sails.config.vagrant.cfgDir 'data', vm.name
-    
-  dataDir: (vm) ->
-    path.join module.exports.cfgDir(vm), 'data'
