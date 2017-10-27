@@ -2,19 +2,9 @@ _ = require 'lodash'
 _.defaults = require 'merge-defaults'
 path = require 'path'
 Promise = require 'bluebird'
+vagrant = require 'node-vagrant'
 sh = require 'shelljs'
-sh.execAsync = (cmd, opts = {}) ->
-  _.defaults opts,
-    async: false
-    silent: true
-  if opts.async
-    return Promise.resolve sh.exec cmd, opts
-  new Promise (resolve, reject) ->
-    sh.exec cmd, opts, (rc, out, err) ->
-      if rc != 0
-        return reject err
-      resolve out
-    
+
 cfg =
   file: (vm) ->
     path.join cfg.dir(vm), 'Vagrantfile'
@@ -75,31 +65,30 @@ module.exports =
       model: 'user'
       required:  true
 
-    cmd: (op, opts = {}) ->
-      cmd = "env VAGRANT_CWD=#{cfg.dir @} vagrant #{op}"
-      if op == 'status'
-        sh.execAsync cmd
-      else 
-        sh
-          .execAsync cmd, opts
-          .then =>
-            @status()
-          .then (status) =>
-            Promise.resolve _.extend status: status, @
+    machine: ->
+      Promise.promisifyAll vagrant.create cwd: cfg.dir @
+
+    cmd: (op) ->
+      @machine()["#{op}Async"]()
+        .then (out) ->
+          sails.log.info out
+          out
+        .catch (err) ->
+          sails.log.error err
+          Promise.reject err
 
     status: ->
       @cmd 'status'
-        .then (status) ->
-          pattern = /^default[ ]*(.*)$/m
-          pattern.exec(status)?[1]
+        .then (res) ->
+          res.default.status
     
     up: ->
       @status()
         .then (status) =>
-          if status == 'running (libvirt)'
-            Promise.resolve _.extend status: status, @
+          if status == 'running'
+            return _.extend status: status, @
           else  
-            @cmd 'up', async: true
+            @cmd 'up'
         
     down: ->
       @cmd 'halt'
