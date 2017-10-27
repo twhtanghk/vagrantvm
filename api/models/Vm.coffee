@@ -72,9 +72,10 @@ cfg =
 
   passwd: (vm, passwd) ->
     try
-      cfg.create _.defaults passwd: passwd, vm
+      Promise.resolve cfg.create _.defaults passwd: passwd, vm
     catch err
       sails.log.error err
+      Promise.reject err
 
 module.exports =
 
@@ -131,6 +132,9 @@ module.exports =
 
     resume: ->
       cfg.resume @
+
+    passwd: (passwd) ->
+      cfg.passwd @, passwd
 
   nextPort: ->
     Vm
