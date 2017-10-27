@@ -32,8 +32,6 @@ describe 'model', ->
           .findOne name: name
           .then (vm) ->
             vm?.up()
-      .then ->
-        Promise.delay uptime
 
   it 'restart vm', ->
     Promise.mapSeries vmlist, (name) ->
