@@ -5,18 +5,6 @@ queue = new PQueue concurrency: 1
 Promise = require 'bluebird'
 
 module.exports =
-  passwd: (req, res) ->
-    Model = actionUtil.parseModel req
-    pk = actionUtil.requirePk req
-    {passwd} = actionUtil.parseValues req
-    Model
-      .findOne pk
-      .then (vm) ->
-        if not vm?
-          return res.notFound()
-        vm.passwd passwd
-        res.ok vm
-      .catch res.negotiate
 
   create: (req, res) ->
     Model = actionUtil.parseModel req
@@ -79,19 +67,17 @@ module.exports =
     cmd = req.params.cmd
     values = actionUtil.parseValues req
     sails.models.vm
-      .findOne id: pk
+      .findOne pk
       .then (vm) ->
         if vm?
           switch cmd
             when 'up'
               vm[cmd]()
-              res.ok()
-            when 'passwd'
-              vm[cmd](values.passwd)
-                .then res.ok
+              res.ok vm
             else
               vm[cmd]()
-                .then res.ok
+                .then ->
+                  res.ok vm
         else
           res.notFound()
       .catch res.negotiate
