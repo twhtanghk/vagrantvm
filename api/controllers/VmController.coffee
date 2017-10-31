@@ -77,7 +77,9 @@ module.exports =
             else
               vm[cmd]()
                 .then ->
-                  res.ok vm
+                  vm.status()
+                .then (status) ->
+                  res.ok _.extend vm, status: status
         else
           res.notFound()
       .catch res.negotiate
