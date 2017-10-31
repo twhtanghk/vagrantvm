@@ -48,7 +48,7 @@ cfg =
   status: (vm) ->
     @cmd vm, 'status'
       .then (res) ->
-        status: res.default.status
+        res.default.status
     
   up: (vm) ->
     @status vm
