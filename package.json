@@ -4,7 +4,7 @@
   "description": "Web App to manage vagrant vm running on top of libvirtd and kvm",
   "keywords": [],
   "dependencies": {
-    "activerecord-model": "^0.0.8",
+    "activerecord-model": "^0.0.9",
     "activiti-client": "~0.0.5",
     "angular-file-saver": "^1.1.3",
     "angularsails": "^0.11.3",
@@ -40,6 +40,7 @@
     "modernizr": "^3.3.1",
     "needle": "^1.3.0",
     "ng-file-upload": "^12.2.13",
+    "node-vagrant": "^1.2.0",
     "p-queue": "^2.2.0",
     "parsed-url": "0.0.0",
     "passport": "^0.3.2",
