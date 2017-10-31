@@ -1,3 +1,5 @@
+    path = require 'path'
+
     module.exports =
 
       vm:
@@ -15,18 +17,20 @@ model to acccess http reverse proxy api
               fetchFull: (opts) ->
                 yield @fetchAll _.defaults url: "#{@baseUrl}/full", opts
             .methods
-              status: ->
-                @save {}, url: path.join stamp.url('update'), 'status'
+              getStamp: ->
+                stamp
+              cmdUrl: (cmd) ->
+                "#{stamp.url('update', _.pick(@, stamp.idAttribute))}/#{cmd}"
               up: ->
-                @save {}, url: path.join stamp.url('update'), 'up'
+                yield @save {}, url: @cmdUrl 'up'
               down: ->
-                @save {}, url: path.join stamp.url('update'), 'down'
+                yield @save {}, url: @cmdUrl 'down'
               restart: ->
-                @save {}, url: path.join stamp.url('update'), 'restart'
+                yield @save {}, url: @cmdUrl 'restart'
               suspend: ->
-                @save {}, url: path.join stamp.url('update'), 'suspend'
+                yield @save {}, url: @cmdUrl 'suspend'
               resume: ->
-                @save {}, url: path.join stamp.url('update'), 'resume'
+                yield @save {}, url: @cmdUrl 'resume'
               passwd: (passwd) ->
-                @save passwd: passwd, url: path.join stamp.url('update'), 'passwd'
+                yield @save {passwd: passwd}, url: @cmdUrl 'passwd'
             .use sails.config.api().use sails.config.oauth2.getOpts
