@@ -5,82 +5,50 @@ Promise = require 'bluebird'
 describe 'controller', ->
   vmlist = ['test1', 'test2']
   vmCreated = null
+  Model = null
+
+  before ->
+    Model = sails.config.vm.model()
 
   it 'create vm', ->
     Promise
-      .all vmlist.map (name) ->
-        req sails.hooks.http.app
-          .post '/api/vm'
-          .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
-          .send name: name
-          .expect 201
-          .then (res) ->
-            res.body
+      .all vmlist.map (name) -> co ->
+        vm = Model name: name
+        yield vm.save()
       .then (res) ->
         vmCreated = res
 
   it 'passwd vm', ->
     Promise
-      .all vmCreated.map (vm) ->
-        req sails.hooks.http.app
-          .put "/api/vm/#{vm.id}/passwd"
-          .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
-          .send passwd: 'passwd'
-          .expect 200
+      .all vmCreated.map (vm) -> co ->
+        yield vm.passwd 'passwd'
 
-  it 'list all vm', ->
-    req sails.hooks.http.app
-      .get '/api/vm'
-      .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
-      .expect 200
+  it 'list all vm', -> co ->
+    yield Model.fetchAll()
 
   it 'full list all vm by armodel', -> co ->
-    gen = yield sails.config.vm.model().fetchFull()
+    gen = yield Model.fetchFull()
     for i from gen()
       console.log i
 
-  it 'status vm', ->
+  it 'fetch vm', ->
     Promise
-      .all vmlist.map (name) ->
-        sails.models.vm
-          .findOne name: name
-          .then (vm) ->
-            req sails.hooks.http.app
-              .get "/api/vm/#{vm.id}"
-              .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
-              .expect 200
+      .all vmCreated.map (vm) -> co ->
+        yield vm.fetch()
 
   it 'up vm', ->
     Promise
-      .all vmlist.map (name) ->
-        sails.models.vm
-          .findOne name: name
-          .then (vm) ->
-            req sails.hooks.http.app
-              .put "/api/vm/#{vm.id}/up"
-              .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
-              .expect 200
-          .then ->
-            Promise.delay uptime
+      .all vmCreated.map (vm) -> co ->
+        yield vm.up()
        
   it 'restart vm', ->
     Promise
-      .all vmlist.map (name) ->
-        sails.models.vm
-          .findOne name: name
-          .then (vm) ->
-            req sails.hooks.http.app
-              .put "/api/vm/#{vm.id}/restart"
-              .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
-              .expect 200
+      .all vmCreated.map (vm) -> co ->
+        yield vm.restart()
 
   it 'delete vm', ->
     Promise
-      .all vmlist.map (name) ->
-        sails.models.vm
-          .findOne name: name
-          .then (vm) ->
-            req sails.hooks.http.app
-              .del "/api/vm/#{vm.id}"
-              .set 'Authorization', "Bearer #{sails.config.oauth2.token}"
-              .expect 200
+      .all vmCreated.map (vm) -> co ->
+        yield vm.destroy()
+      .catch ->
+        Promise.resolve
