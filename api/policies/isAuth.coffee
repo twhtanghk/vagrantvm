@@ -3,7 +3,7 @@
 module.exports = (req, res, next) ->
   isAuth req, res, ->
     sails.models.user
-      .findOrCreate req.user
+      .findOrCreate email: req.user.email
       .then ->
         next()
       .catch res.negotiate
