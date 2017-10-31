@@ -10,8 +10,6 @@ before ->
     .then -> co ->
       sails.config.oauth2
         .validToken sails.config.oauth2
-    .then (token) ->
-      global.uptime = 150000
 
 after ->
   Sails.lowerAsync()
