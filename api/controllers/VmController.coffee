@@ -79,15 +79,13 @@ module.exports =
                 .then ->
                   vm.status()
                 .then (status) ->
-                  res.ok _.extend vm, status: status
+                  res.ok _.extend(vm, status: status)
             else
               vm[cmd]()
                 .then ->
                   vm.status()
                 .then (status) ->
-                  res.ok _.extend vm, status: status
+                  res.ok _.extend(vm, status: status)
         else
-          console.log 'not found'
           res.notFound()
-      .catch (err) ->
-        res.negotiate err
+      .catch res.negotiate
