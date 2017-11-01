@@ -18,11 +18,6 @@ describe 'controller', ->
       .then (res) ->
         vmCreated = res
 
-  it 'passwd vm', ->
-    Promise
-      .all vmCreated.map (vm) -> co ->
-        yield vm.passwd 'passwd'
-
   it 'list all vm', -> co ->
     yield Model.fetchAll()
 
@@ -35,6 +30,11 @@ describe 'controller', ->
     Promise
       .all vmCreated.map (vm) -> co ->
         yield vm.fetch()
+
+  it 'passwd vm', ->
+    Promise
+      .all vmCreated.map (vm) -> co ->
+        yield vm.passwd 'passwd'
 
   it 'up vm', ->
     Promise
