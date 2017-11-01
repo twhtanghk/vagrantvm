@@ -25,6 +25,13 @@ describe 'model', ->
         .then (vm) ->
           vm?.status()
 
+  it 'passwd vm', ->
+    Promise.mapSeries vmlist, (name) ->
+      sails.models.vm
+        .findOne name: name
+        .then (vm) ->
+          vm?.passwd 'passwd'
+
   it 'up vm', ->
     Promise
       .mapSeries vmlist, (name) ->
