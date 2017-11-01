@@ -27,7 +27,7 @@ module.exports =
         if vm?
           return vm.status()
             .then (status) ->
-              res.json _.extend vm, status: status
+              res.ok _.extend vm, status: status
         res.notFound()
       .catch res.serverError
 
@@ -74,6 +74,12 @@ module.exports =
             when 'up'
               vm[cmd]()
               res.ok vm
+            when 'passwd'
+              vm[cmd](values.passwd)
+                .then ->
+                  vm.status()
+                .then (status) ->
+                  res.ok _.extend vm, status: status
             else
               vm[cmd]()
                 .then ->
@@ -81,5 +87,7 @@ module.exports =
                 .then (status) ->
                   res.ok _.extend vm, status: status
         else
+          console.log 'not found'
           res.notFound()
-      .catch res.negotiate
+      .catch (err) ->
+        res.negotiate err
