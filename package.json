@@ -1,6 +1,6 @@
 {
   "name": "vagrantvm",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Web App to manage vagrant vm running on top of libvirtd and kvm",
   "keywords": [],
   "dependencies": {
