@@ -10,9 +10,9 @@ url to access api for http reverse proxy
         
 model to acccess http reverse proxy api
 
-        model: ->
+        model: (url = sails.config.vm.url) ->
           stamp = sails.config
-            .armodel sails.config.vm.url
+            .armodel url
             .statics
               fetchFull: (opts) ->
                 yield @fetchAll _.defaults url: "#{@baseUrl}/full", opts
